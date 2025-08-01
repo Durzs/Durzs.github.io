@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElquiLab - Aprendizaje en el Valle del Elqui</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .vicuna-chat {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-purple-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <img src="https://img.icons8.com/color/48/000000/llama.png" alt="ElquiLab Logo" class="h-10 w-10">
+                        <span class="text-2xl font-bold text-purple-800 ml-2">ElquiLab</span>
+                    </div>
+                    <div class="hidden md:flex space-x-8">
+                        <a href="#" class="text-purple-700 font-medium hover:text-purple-900">Inicio</a>
+                        <a href="#" class="text-gray-600 hover:text-purple-700">Cursos</a>
+                        <a href="#" class="text-gray-600 hover:text-purple-700">Desafíos</a>
+                        <a href="#" class="text-gray-600 hover:text-purple-700">Bienestar</a>
+                        <a href="#" class="text-gray-600 hover:text-purple-700">Comunidad</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Iniciar sesión</button>
+                    <button class="hidden md:block bg-gradient-to-r from-purple-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:opacity-90 transition">Regístrate</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-16 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Aprende, crea y crece en el <span class="text-purple-600">Valle del Elqui</span></h1>
+                    <p class="text-lg text-gray-600 mb-8">Explora cursos interactivos, resuelve desafíos prácticos y desarrolla habilidades socioemocionales con nuestra vicuña guía.</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition font-medium">Explorar cursos</button>
+                        <button class="bg-white text-purple-600 border border-purple-600 px-6 py-3 rounded-lg hover:bg-purple-50 transition font-medium">Ver desafíos</button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <img src="https://images.unsplash.com/photo-1582719471385-7ad98c5f3c3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Valle del Elqui" class="rounded-xl shadow-xl w-full h-80 object-cover">
+                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-lg">
+                        <div class="flex items-center">
+                            <div class="relative">
+                                <svg class="w-16 h-16" viewBox="0 0 36 36">
+                                    <path d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#e6e6e6" stroke-width="3"/>
+                                    <path class="progress-ring__circle" 
+                                        stroke-dasharray="85, 100" 
+                                        d="M18 2.0845
+                                        a 15.9155 15.9155 0 0 1 0 31.831
+                                        a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                        fill="none" stroke="#8b5cf6" stroke-width="3"/>
+                                </svg>
+                                <span class="absolute inset-0 flex items-center justify-center text-xs font-bold text-purple-700">85%</span>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-xs text-gray-500">Tu progreso</p>
+                                <p class="text-sm font-medium">¡Sigue así!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Courses -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Nuestros Cursos Destacados</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Aprende sobre astronomía, agricultura sustentable, energías renovables y más, con la magia del Valle del Elqui.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Course 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden course-card transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Astronomía" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">Nuevo</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Astronomía</span>
+                            <span class="ml-auto text-sm text-gray-500">15 lecciones</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Astronomía en los Cielos del Elqui</h3>
+                        <p class="text-gray-600 mb-4">Descubre los secretos del universo desde uno de los mejores lugares para observar las estrellas.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="Instructor" class="w-8 h-8 rounded-full">
+                                <span class="ml-2 text-sm text-gray-600">Dra. Vega</span>
+                            </div>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="ml-1 text-gray-600">4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden course-card transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Agricultura" class="w-full h-48 object-cover">
+                        <div class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full">Popular</div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Agricultura</span>
+                            <span class="ml-auto text-sm text-gray-500">10 lecciones</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Agricultura Sustentable en el Valle</h3>
+                        <p class="text-gray-600 mb-4">Aprende técnicas ancestrales y modernas para cultivar en el árido clima del Elqui.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Instructor" class="w-8 h-8 rounded-full">
+                                <span class="ml-2 text-sm text-gray-600">Ing. Pávez</span>
+                            </div>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="ml-1 text-gray-600">4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Course 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden course-card transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1508514177221-188e1eaf7083?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Energías" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center mb-2">
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">Energía</span>
+                            <span class="ml-auto text-sm text-gray-500">12 lecciones</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Energías Renovables del Desierto</h3>
+                        <p class="text-gray-600 mb-4">Explora cómo el sol y el viento del Elqui pueden generar energía limpia para el futuro.</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Instructor" class="w-8 h-8 rounded-full">
+                                <span class="ml-2 text-sm text-gray-600">Dra. Solar</span>
+                            </div>
+                            <div class="flex items-center text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <span class="ml-1 text-gray-600">4.7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="bg-white text-purple-600 border border-purple-600 px-6 py-3 rounded-lg hover:bg-purple-50 transition font-medium">Ver todos los cursos</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Makerspace Challenges -->
+    <section class="py-16 px-4 bg-gradient-to-r from-purple-50 to-blue-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Desafíos Makerspace</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Resuelve problemas reales del Valle del Elqui con proyectos prácticos basados en ABP.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Challenge 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-lightbulb text-purple-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Sistema de Riego Inteligente</h3>
+                    <p class="text-gray-600 mb-4">Diseña un sistema de riego eficiente para los cultivos del valle usando sensores y tecnología IoT.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-users mr-1"></i>
+                        <span>15 equipos participando</span>
+                    </div>
+                </div>
+                
+                <!-- Challenge 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-solar-panel text-blue-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Cocina Solar Portátil</h3>
+                    <p class="text-gray-600 mb-4">Crea un prototipo de cocina solar que pueda ser usado por excursionistas en el valle.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-users mr-1"></i>
+                        <span>8 equipos participando</span>
+                    </div>
+                </div>
+                
+                <!-- Challenge 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-star text-green-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Observatorio Ciudadano</h3>
+                    <p class="text-gray-600 mb-4">Desarrolla una plataforma para compartir observaciones astronómicas entre aficionados.</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-users mr-1"></i>
+                        <span>12 equipos participando</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-10 bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="md:flex">
+                    <div class="md:w-1/2 p-8">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">¿Cómo funciona nuestro Makerspace?</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="bg-purple-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-1 text-purple-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Elige un desafío</h4>
+                                    <p class="text-gray-600 text-sm">Selecciona entre proyectos basados en problemas reales del valle.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-blue-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-2 text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Forma tu equipo</h4>
+                                    <p class="text-gray-600 text-sm">Trabaja con otros estudiantes o únete a un equipo existente.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-green-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-3 text-green-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Desarrolla tu solución</h4>
+                                    <p class="text-gray-600 text-sm">Usa nuestros recursos y mentorías para crear tu prototipo.</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-yellow-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-4 text-yellow-600"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">Comparte y gana</h4>
+                                    <p class="text-gray-600 text-sm">Presenta tu proyecto y gana premios y reconocimiento.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="md:w-1/2 bg-gray-100 flex items-center justify-center p-8">
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Equipo trabajando" class="rounded-lg shadow-md">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Socioemotional Learning -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Bienestar Socioemocional</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Desarrolla habilidades para la vida con nuestra vicuña guía y actividades diseñadas para tu crecimiento personal.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl shadow-md overflow-hidden">
+                <div class="md:w-1/2 p-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Conoce a Vicu, tu asistente de bienestar</h3>
+                    <p class="text-gray-600 mb-6">Vicu es una vicuña sabia que te acompañará en tu viaje de aprendizaje, ofreciéndote consejos, recordatorios de descanso y actividades para manejar el estrés.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-purple-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-heart text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Registro emocional</h4>
+                                <p class="text-gray-600 text-sm">Lleva un diario de tus emociones y recibe retroalimentación personalizada.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-blue-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-medal text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Desafíos de bienestar</h4>
+                                <p class="text-gray-600 text-sm">Completa pequeñas actividades diarias para mejorar tu salud mental.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-green-600 p-2 rounded-full mr-4">
+                                <i class="fas fa-users text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-800">Círculos de conversación</h4>
+                                <p class="text-gray-600 text-sm">Únete a espacios seguros para compartir experiencias con otros estudiantes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative flex justify-center p-8">
+                    <div class="vicuna-chat relative">
+                        <img src="https://img.icons8.com/color/96/000000/llama.png" alt="Vicu la vicuña" class="w-48 h-48">
+                        <div class="absolute -top-4 -right-4 bg-white rounded-full shadow-lg p-2">
+                            <div class="bg-purple-600 rounded-full p-2">
+                                <i class="fas fa-comment-dots text-white"></i>
+                            </div>
+                        </div>
+                        <div class="absolute top-0 right-0 mt-12 mr-4 bg-white p-3 rounded-lg shadow-md max-w-xs">
+                            <p class="text-sm text-gray-800">¡Hola! Soy Vicu. ¿Cómo te sientes hoy?</p>
+                            <div class="flex space-x-2 mt-2">
+                                <button class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">😊 Bien</button>
+                                <button class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">😐 Regular</button>
+                                <button class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">😔 Mal</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+                <!-- Activity 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Meditación Guiada</h3>
+                    <p class="text-gray-600 mb-4">Aprende técnicas de respiración y mindfulness inspiradas en la tranquilidad del valle.</p>
+                    <div class="flex items-center text-sm text-purple-600 font-medium">
+                        <span>Iniciar actividad</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </div>
+                </div>
+                
+                <!-- Activity 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Diario de Gratitud</h3>
+                    <p class="text-gray-600 mb-4">Reflexiona sobre las cosas positivas de tu día y cultiva una mentalidad agradecida.</p>
+                    <div class="flex items-center text-sm text-blue-600 font-medium">
+                        <span>Iniciar actividad</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </div>
+                </div>
+                
+                <!-- Activity 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Taller de Manejo de Ansiedad</h3>
+                    <p class="text-gray-600 mb-4">Estrategias prácticas para manejar el estrés académico y personal.</p>
+                    <div class="flex items-center text-sm text-green-600 font-medium">
+                        <span>Iniciar actividad</span>
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gamification -->
+    <section class="py-16 px-4 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2">Tu Progreso en ElquiLab</h2>
+                <p class="text-gray-300 max-w-2xl mx-auto">Gana puntos, desbloquea logros y sube de nivel mientras aprendes.</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between bg-gray-800 rounded-xl p-8 mb-10">
+                <div class="flex items-center mb-6 md:mb-0">
+                    <div class="relative">
+                        <svg class="w-24 h-24" viewBox="0 0 36 36">
+                            <path d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                fill="none" stroke="#4B5563" stroke-width="3"/>
+                            <path class="progress-ring__circle" 
+                                stroke-dasharray="65, 100" 
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                fill="none" stroke="#8B5CF6" stroke-width="3"/>
+                        </svg>
+                        <span class="absolute inset-0 flex items-center justify-center text-lg font-bold">65%</span>
+                    </div>
+                    <div class="ml-6">
+                        <p class="text-gray-400 text-sm">Tu nivel actual</p>
+                        <h3 class="text-2xl font-bold">Explorador del Valle</h3>
+                        <p class="text-purple-400 text-sm">150/230 puntos para el siguiente nivel</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <h4 class="font-medium mb-2">Próximos logros</h4>
+                    <div class="flex space-x-4">
+                        <div class="text-center">
+                            <div class="bg-gray-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fas fa-book text-yellow-400"></i>
+                            </div>
+                            <p class="text-xs">Completar 5 lecciones</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-gray-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fas fa-users text-blue-400"></i>
+                            </div>
+                            <p class="text-xs">Unirse a un equipo</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-gray-600 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fas fa-comment text-green-400"></i>
+                            </div>
+                            <p class="text-xs">Hablar con Vicu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-gray-800 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">Tabla de Clasificación</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="bg-purple-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3">1</span>
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Usuario" class="w-8 h-8 rounded-full">
+                                <span class="ml-3 font-medium">María González</span>
+                            </div>
+                            <span class="bg-yellow-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">980 pts</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3">2</span>
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Usuario" class="w-8 h-8 rounded-full">
+                                <span class="ml-3 font-medium">Juan Pérez</span>
+                            </div>
+                            <span class="bg-gray-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">875 pts</span>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-700 p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="bg-green-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3">3</span>
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Usuario" class="w-8 h-8 rounded-full">
+                                <span class="ml-3 font-medium">Ana Rojas</span>
+                            </div>
+                            <span class="bg-gray-400 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">820 pts</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 rounded-lg">
+                            <div class="flex items-center">
+                                <span class="text-gray-400 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3">15</span>
+                                <img src="https://randomuser.me/api/portraits/men/65.jpg" alt="Usuario" class="w-8 h-8 rounded-full">
+                                <span class="ml-3 font-medium">Tú</span>
+                            </div>
+                            <span class="text-purple-400 text-xs font-bold px-2 py-1 rounded-full">650 pts</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">Tus Insignias</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="bg-purple-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-star text-yellow-400 text-2xl"></i>
+                            </div>
+                            <p class="text-xs font-medium">Primeros pasos</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-blue-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-book-open text-blue-300 text-2xl"></i>
+                            </div>
+                            <p class="text-xs font-medium">Curioso</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2 opacity-40">
+                                <i class="fas fa-medal text-gray-500 text-2xl"></i>
+                            </div>
+                            <p class="text-xs text-gray-500">Maestro (bloqueada)</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-green-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-leaf text-green-300 text-2xl"></i>
+                            </div>
+                            <p class="text-xs font-medium">Ecologista</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2 opacity-40">
+                                <i class="fas fa-users text-gray-500 text-2xl"></i>
+                            </div>
+                            <p class="text-xs text-gray-500">Colaborador (bloqueada)</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="bg-yellow-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                                <i class="fas fa-sun text-yellow-300 text-2xl"></i>
+                            </div>
+                            <p class="text-xs font-medium">Astroaficionado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Historias del Valle</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Lo que dicen nuestros estudiantes sobre su experiencia en ElquiLab</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Usuario" class="w-12 h-12 rounded-full">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-800">Camila Díaz</h4>
+                            <p class="text-sm text-gray-600">Estudiante, Paihuano</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Los cursos de astronomía me han permitido entender mejor nuestro cielo y ahora doy tours astronómicos en mi pueblo."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Usuario" class="w-12 h-12 rounded-full">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-800">Pedro Muñoz</h4>
+                            <p class="text-sm text-gray-600">Agricultor, Vicuña</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Gracias al desafío de riego inteligente pude optimizar el agua en mi parcela y aumentar mi producción de uvas."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Usuario" class="w-12 h-12 rounded-full">
+                        <div class="ml-4">
+                            <h4 class="font-bold text-gray-800">Javiera Rojas</h4>
+                            <p class="text-sm text-gray-600">Estudiante, La Serena</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Vicu me ha ayudado a manejar mi ansiedad antes de los exámenes. Las actividades de bienestar son mi parte favorita."</p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-16 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">¿Listo para comenzar tu aventura en ElquiLab?</h2>
+            <p class="text-xl mb-8">Únete a una comunidad de aprendizaje única inspirada en la magia del Valle del Elqui.</p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="bg-white text-purple-600 px-6 py-3 rounded-lg hover:bg-gray-100 transition font-medium">Crear cuenta gratuita</button>
+                <button class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:bg-opacity-10 transition font-medium">Explorar cursos</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://img.icons8.com/color/48/000000/llama.png" alt="ElquiLab Logo" class="h-8 w-8">
+                        <span class="text-xl font-bold ml-2">ElquiLab</span>
+                    </div>
+                    <p class="text-gray-400">Aprendizaje inspirado en la magia y sabiduría del Valle del Elqui.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Cursos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Astronomía</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Agricultura</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Energías Renovables</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Turismo Sustentable</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Artesanía Local</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Desafíos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Makerspace</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Proyectos ABP</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Competiciones</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Talleres</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Mentorías</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contacto</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">Valle del Elqui, Chile</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">hola@elquilab.cl</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">+56 9 8765 4321</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm">© 2023 ElquiLab. Todos los derechos reservados.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Privacidad</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">Términos</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Vicuña Chatbot -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="chatbotButton" class="bg-purple-600 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center hover:bg-purple-700 transition">
+            <img src="https://img.icons8.com/color/48/000000/llama.png" alt="Vicu" class="w-8 h-8">
+        </button>
+        <div id="chatbotWindow" class="hidden absolute bottom-20 right-0 w-80 bg-white rounded-xl shadow-xl overflow-hidden">
+            <div class="bg-purple-600 text-white p-4 flex items-center">
+                <img src="https://img.icons8.com/color/48/000000/llama.png" alt="Vicu" class="w-8 h-8 mr-2">
+                <h3 class="font-bold">Vicu - Asistente de Bienestar</h3>
+                <button id="closeChatbot" class="ml-auto text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4 h-64 overflow-y-auto bg-gray-50">
+                <div class="flex mb-4">
+                    <div class="bg-purple-100 p-3 rounded-lg max-w-xs">
+                        <p class="text-sm">¡Hola! Soy Vicu, tu asistente de bienestar. ¿En qué puedo ayudarte hoy?</p>
+                    </div>
+                </div>
+                <div class="flex justify-end mb-4">
+                    <div class="bg-blue-100 p-3 rounded-lg max-w-xs">
+                        <p class="text-sm">Hola Vicu, ¿qué actividades de bienestar me recomiendas?</p>
+                    </div>
+                </div>
+                <div class="flex mb-4">
+                    <div class="bg-purple-100 p-3 rounded-lg max-w-xs">
+                        <p class="text-sm">Podrías probar nuestra meditación guiada "Cielos del Elqui" o escribir en el diario de gratitud. ¿Qué prefieres?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 border-t border-gray-200 bg-white">
+                <div class="flex">
+                    <input type="text" placeholder="Escribe un mensaje..." class="flex-1 border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-r-lg hover:bg-purple-700">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chatbot toggle
+        const chatbotButton = document.getElementById('chatbotButton');
+        const chatbotWindow = document.getElementById('chatbotWindow');
+        const closeChatbot = document.getElementById('closeChatbot');
+        
+        chatbotButton.addEventListener('click', () => {
+            chatbotWindow.classList.toggle('hidden');
+        });
+        
+        closeChatbot.addEventListener('click', () => {
+            chatbotWindow.classList.add('hidden');
+        });
+        
+        // Animate progress rings
+        document.addEventListener('DOMContentLoaded', function() {
+            const circles = document.querySelectorAll('.progress-ring__circle');
+            circles.forEach(circle => {
+                const radius = circle.r.baseVal.value;
+                const circumference = radius * 2 * Math.PI;
+                const percent = parseFloat(circle.getAttribute('stroke-dasharray').split(',')[0]);
+                
+                circle.style.strokeDasharray = `${circumference} ${circumference}`;
+                circle.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+            });
+        });
+    </script>
+</body>
+</html>
