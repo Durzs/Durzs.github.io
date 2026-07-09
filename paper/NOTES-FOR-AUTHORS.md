@@ -48,7 +48,50 @@ El manuscrito actual **no incluye imágenes** deliberadamente. Antes de agregar:
 - Formato de citas: APA 7.
 - Revisión: por pares, con énfasis en la calidad de la narrativa de diseño (precisión, honestidad, riqueza de contexto), no en resultados empíricos → por eso esta ruta es viable sin implementación.
 
-## 4. Sugerencias no bloqueantes
+## 4. Cumplimiento del Publication Ethics and Malpractice Statement de IJDL (rev. jul. 2025)
+
+Contraste del manuscrito con la declaración de ética oficial de la revista:
+
+| Requisito IJDL | Estado | Acción |
+| :--- | :--- | :--- |
+| Integridad (no fabricación/falsificación) | ✅ En regla | El manuscrito declara explícitamente que el proyecto no está implementado y distingue diseño de resultados |
+| Autoría: los 4 criterios (contribución sustancial + redacción/revisión + aprobación final + responsabilidad) para CADA autor | ⚠️ Pendiente | Confirmar que los 5 autores cumplen los 4 criterios; quien no los cumpla va a Agradecimientos, no a autoría. Designar autor de correspondencia (asume obligaciones formales post-publicación) |
+| Afiliaciones (APA 7; máx. 2; deben reflejar dónde se realizó el diseño) | ⚠️ Pendiente | Completar placeholder |
+| Plagio (tolerancia cero; usan software de detección) | ✅/⚠️ | El texto es reescritura, no copia. PERO: si el brief del concurso fue publicado o es públicamente accesible, citarlo y declarar la relación en la carta al editor (la política de reuso de tesis/estudios previos aplica por analogía) |
+| Publicación duplicada/redundante | ⚠️ Atención | No enviar simultáneamente a otra revista. El artículo en español es suficientemente distinto (otro género, foco y lengua), pero declarar su existencia en ambas cartas al editor y citarse mutuamente si alguno se acepta primero |
+| IRB / datos de interacción con humanos | ✅ En regla | El manuscrito solo cita testimonios ya publicados en prensa (fuentes secundarias); no reporta datos propios recolectados de personas. OJO: cualquier versión futura con datos de implementación requerirá aprobación ética previa |
+| Ética ambiental (elementos naturales) | ✅ N/A por ahora | El caso no reporta recolección en ecosistemas; si futuros casos la incluyen (sensores, hidroponía en terreno), agregar la declaración que exige la política |
+| Conflictos de interés y financiamiento | ⚠️ Pendiente | Se agregaron secciones "Funding" y "Competing Interests" al manuscrito — completarlas (incluir premio/apoyo del concurso si lo hubo) |
+| Visuales: IJDL ESPERA representación visual rica; prohíbe visuales que tergiversen; exige declarar IA en visuales (herramientas, prompts, métodos) | ❌ Brecha | El manuscrito no tiene imágenes aún. Crear diagramas propios (ciclo de 12 semanas, modelo de actores, fotos propias de los recintos). Si se usan mockups generados con IA, declarar herramienta+prompts+método en el cuerpo o apéndice |
+| **Política GenAI: se desaconseja generar texto con IA; TODO uso debe declararse en el manuscrito con herramientas, prompts y métodos; los autores validan y responden por todo** | ❌ **Brecha crítica** | Este borrador fue generado con asistencia de IA. El equipo debe: (1) reescribir/revisar críticamente hasta apropiarse del texto en su propia voz, (2) verificar cada afirmación y referencia, (3) completar la sección "Disclosure of Generative AI Use" ya insertada en el manuscrito describiendo herramientas y proceso reales. Enviar el borrador tal cual contravendría la política |
+| Revisión doble-anónima | ⚠️ Pendiente | Preparar versión anonimizada para revisión (sin nombres, afiliaciones ni autocitas identificables) además de la versión completa |
+| Licencia CC BY-NC-ND 4.0, open access, preprints permitidos | ✅ Compatible | Pueden depositar preprint en repositorio institucional sin que cuente como publicación previa |
+
+**Veredicto**: la estructura y honestidad del manuscrito están alineadas con la política; los bloqueantes reales son (1) la declaración y apropiación del texto asistido por IA, (2) los visuales, y (3) los placeholders administrativos (autoría, afiliaciones, financiamiento, conflictos).
+
+## 5. Formato de envío a IJDL
+
+- El envío se hace por la plataforma OJS de IU ScholarWorks (registrarse como autor en el sitio de la revista y usar "Make a Submission").
+- **El manuscrito se envía como archivo editable usando la plantilla oficial de IJDL** (el "IJDL Manuscript Template" que la propia declaración de ética referencia, disponible en la página de Author Guidelines; normalmente es una plantilla Word .docx). **No se envía PDF**: el PDF final lo produce el equipo de producción de la revista tras la aceptación; el autor de correspondencia firma ("signs off") esa versión final en PDF.
+- Citas y referencias: APA 7.ª edición.
+- Preparar DOS archivos: versión completa y versión anonimizada para la revisión doble-anónima.
+- Imágenes: alta resolución, con permisos/atribución resueltos, integradas según la plantilla.
+- Carta al editor (cover letter): declarar origen en el brief del concurso, el uso de IA, y la existencia del artículo hermano en español.
+- ⚠️ El acceso a la web de IJDL estaba bloqueado desde este entorno de trabajo, así que estos puntos reflejan la declaración de ética + la práctica documentada de la revista: **confirmar plantilla vigente y checklist de envío en la página oficial de Author Guidelines antes de enviar** (https://scholarworks.iu.edu/journals/index.php/ijdl → About → Submissions).
+
+## 6. Artículo hermano en español (`articulo-sostenibilidad-stem-rural-es.md`)
+
+Dónde publicarlo (elegir UNO a la vez — no se permite envío simultáneo):
+
+1. **REXE — Revista de Estudios y Experiencias en Educación** (UCSC, Chile; Scopus; sin APC) — **recomendada**: perfil ideal para análisis de casos educativos territoriales chilenos, tiempos razonables.
+2. **Estudios Pedagógicos** (UACh, Chile; Scopus/SciELO) — más prestigio nacional; exigirá probablemente robustecer el método (agregar entrevistas).
+3. **Perspectiva Educacional** (PUCV, Chile; SciELO) — buena alternativa si REXE rechaza.
+4. **Revista Iberoamericana de Educación** (OEI) — alcance iberoamericano, receptiva a análisis de políticas/iniciativas.
+5. Vía rápida alternativa: **Congreso TISE** como paper corto, y la versión extendida a revista después (citando el paper de congreso).
+
+Pendientes específicos de este artículo: abstract en inglés, tabla-inventario del corpus documental como anexo, y las mismas verificaciones de referencias y declaración de IA que el design case.
+
+## 7. Sugerencias no bloqueantes
 
 - La sección 3 (precedentes) tiene potencial de artículo independiente en español sobre sostenibilidad de iniciativas STEM rurales en Coquimbo.
 - Si la implementación parte antes del envío, agregar aunque sea un párrafo de "estado actual" — fortalece mucho el caso.

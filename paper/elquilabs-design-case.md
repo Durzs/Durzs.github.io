@@ -241,7 +241,19 @@ For designers working on informal STEM learning in rural Latin America, we offer
 
 ## Author Contributions
 
-[AUTHORS: complete using the CRediT taxonomy — conceptualization, investigation, writing – original draft, writing – review & editing, visualization, etc.]
+[AUTHORS: complete using the CRediT taxonomy — conceptualization, investigation, writing – original draft, writing – review & editing, visualization, etc. Per IJDL policy, every listed author must meet ALL four authorship criteria: substantial contribution to the design; drafting or critical revision; final approval; and accountability for the work.]
+
+## Funding
+
+[AUTHORS: declare all funding that supported the development of the design, including any prize, stipend, or support received through the competition/program in which the design originated. If none, state: "This design received no external funding." IJDL requires this statement in the manuscript.]
+
+## Competing Interests
+
+[AUTHORS: disclose any financial relationships, professional affiliations, or personal connections that could be perceived to affect objectivity — including any intention to seek funding for implementing ElquiLabs. If none, state so explicitly. IJDL requires this statement in the manuscript.]
+
+## Disclosure of Generative AI Use
+
+[AUTHORS — REQUIRED BY IJDL POLICY, DO NOT OMIT: IJDL requires that any use of generative AI in producing text or visuals be disclosed in the body or appendix of the submission, including a description of the relevant tools, prompts, and methods. This draft manuscript was prepared with substantial assistance from a large language model (Claude, Anthropic) working from the team's original project brief; the app interface mockups in the original brief were also AI-generated. Before submission the team must (a) critically revise, verify, and take full intellectual ownership of every claim in this text — IJDL discourages AI-generated prose, so substantial rewriting in the team's own voice is strongly advised, not optional polish; and (b) replace this placeholder with an accurate disclosure describing the tools and process actually used.]
 
 ---
 
