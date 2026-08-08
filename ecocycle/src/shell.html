@@ -1,0 +1,202 @@
+<title>EcoCycle — How the collector system works</title>
+<style>
+/*FONTS*/
+
+/* ============ tokens ============ */
+:root{
+  --ground:#E9EDE6;
+  --ink:#0F1F1D;
+  --muted:#5C6E6A;
+  --line:#C6D0C8;
+  --paper:#F7F8F4;
+  --oil:#DE9226;
+  --oil-deep:#A9661A;
+  --oil-glow:#F2B75B;
+  --sys:#0E5A63;
+  --sys2:#12808C;
+  --money:#1F7A4D;
+  --water:#3E6BB5;
+  --risk:#C8452F;
+
+  --shell:#0B1416;
+  --shell-ink:#DCE7E3;
+  --shell-muted:#7E9491;
+  --shell-line:#1E3236;
+
+  --display:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  --body:'Public Sans',ui-sans-serif,system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',monospace;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--shell);
+  color:var(--shell-ink);
+  font-family:var(--body);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+/* ============ shell layout ============ */
+.app{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  padding:16px;
+}
+.frame{
+  position:relative;
+  width:1920px;height:1080px;
+  transform-origin:top left;
+  flex:0 0 auto;
+}
+.frame-wrap{position:relative;flex:0 1 auto}
+
+/* ============ the stage (the "film") ============ */
+.stage{
+  position:absolute;inset:0;
+  width:1920px;height:1080px;
+  overflow:hidden;
+  background:var(--ground);
+  color:var(--ink);
+  border-radius:6px;
+}
+.scene{position:absolute;inset:0;opacity:0;pointer-events:none}
+.scene svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+/* header */
+.hdr{position:absolute;left:96px;top:56px;right:96px;display:flex;align-items:flex-start;justify-content:space-between;gap:40px}
+.hdr-l{max-width:1200px}
+.eyebrow{
+  font-family:var(--mono);font-size:20px;font-weight:500;letter-spacing:.20em;
+  text-transform:uppercase;color:var(--sys);
+  display:flex;align-items:center;gap:14px;
+}
+.eyebrow .dot{width:10px;height:10px;border-radius:50%;background:var(--oil);flex:0 0 auto}
+.title{
+  font-family:var(--display);font-weight:800;font-size:58px;line-height:1.02;
+  letter-spacing:-.022em;margin-top:12px;text-wrap:balance;color:var(--ink);
+}
+.steps{display:flex;gap:10px;align-items:center;padding-top:6px}
+.step-chip{
+  width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:19px;font-weight:500;
+  border:2px solid var(--line);color:var(--muted);background:transparent;
+}
+.step-chip.done{border-color:var(--sys);color:var(--sys)}
+.step-chip.on{border-color:var(--sys);background:var(--sys);color:#F2F7F5}
+
+/* caption band */
+.capband{
+  position:absolute;left:0;right:0;bottom:0;height:236px;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 150px 26px;
+}
+.cap{
+  font-family:var(--body);font-weight:500;font-size:40px;line-height:1.32;
+  letter-spacing:-.008em;text-align:center;max-width:1480px;color:var(--ink);
+  text-wrap:balance;
+}
+.cap b{font-weight:700;color:var(--oil-deep)}
+.cap i{font-style:normal;font-weight:700;color:var(--sys)}
+.cap u{text-decoration:none;font-weight:700;color:var(--risk)}
+.cap s{text-decoration:none;font-weight:700;color:var(--money)}
+
+/* stage is dark during act 1 */
+.stage.dark{background:#0D1719;color:#E8F0ED}
+.stage.dark .title{color:#F1F6F3}
+.stage.dark .eyebrow{color:#79B8AE}
+.stage.dark .cap{color:#E4EDEA}
+.stage.dark .cap b{color:var(--oil-glow)}
+.stage.dark .cap i{color:#6FC3BC}
+.stage.dark .cap u{color:#F0705E}
+
+/* footer hairline + brand */
+.progress{position:absolute;left:0;bottom:0;height:4px;width:100%;background:rgba(15,31,29,.10)}
+.stage.dark .progress{background:rgba(232,240,237,.14)}
+.progress i{display:block;height:100%;background:var(--oil);width:0}
+.brand{
+  position:absolute;right:96px;bottom:38px;
+  font-family:var(--mono);font-size:17px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);opacity:.75;
+}
+.stage.dark .brand{color:#7E9491}
+
+/* ============ controls ============ */
+.controls{
+  width:100%;max-width:1180px;flex:0 0 auto;
+  display:flex;align-items:center;gap:16px;
+  font-family:var(--mono);font-size:13px;color:var(--shell-muted);
+}
+.btn{
+  appearance:none;border:1px solid var(--shell-line);background:#111E21;color:var(--shell-ink);
+  border-radius:9px;padding:9px 14px;font-family:var(--mono);font-size:13px;letter-spacing:.06em;
+  cursor:pointer;text-transform:uppercase;
+}
+.btn:hover{border-color:#2E4B50;background:#16272B}
+.btn:focus-visible{outline:2px solid var(--oil);outline-offset:2px}
+.btn.play{min-width:96px}
+.scrub{
+  flex:1;position:relative;height:30px;display:flex;align-items:center;cursor:pointer;
+}
+.scrub-track{position:absolute;left:0;right:0;height:6px;border-radius:3px;background:#152528;overflow:hidden}
+.scrub-fill{height:100%;background:var(--oil)}
+.scrub-marks{position:absolute;left:0;right:0;height:14px;pointer-events:none}
+.scrub-marks i{position:absolute;top:0;width:2px;height:14px;background:#2B4449}
+.time{min-width:96px;text-align:right;font-variant-numeric:tabular-nums}
+.chapters{
+  width:100%;max-width:1180px;display:flex;flex-wrap:wrap;gap:7px;flex:0 0 auto;
+}
+.chip{
+  appearance:none;border:1px solid var(--shell-line);background:transparent;color:var(--shell-muted);
+  border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:12px;cursor:pointer;
+  letter-spacing:.04em;
+}
+.chip:hover{color:var(--shell-ink);border-color:#2E4B50}
+.chip[aria-current="true"]{background:var(--oil);border-color:var(--oil);color:#1B1204;font-weight:500}
+.chip:focus-visible{outline:2px solid var(--oil);outline-offset:2px}
+
+body.capture .controls,body.capture .chapters{display:none}
+body.capture .app{padding:0;gap:0}
+body.capture .stage{border-radius:0}
+
+@media (prefers-reduced-motion:reduce){.frame{transition:none}}
+</style>
+
+<div class="app" id="app">
+  <div class="frame-wrap"><div class="frame" id="frame">
+    <div class="stage" id="stage">
+      <div id="film"></div>
+      <div class="hdr">
+        <div class="hdr-l">
+          <div class="eyebrow" id="eyebrow"><span class="dot"></span><span id="eyebrow-t"></span></div>
+          <div class="title" id="title"></div>
+        </div>
+        <div class="steps" id="steps"></div>
+      </div>
+      <div class="capband"><div class="cap" id="cap"></div></div>
+      <div class="brand">EcoCycle · Pavuna–Meriti Basin</div>
+      <div class="progress"><i id="prog"></i></div>
+    </div>
+  </div></div>
+
+  <div class="controls">
+    <button class="btn play" id="playBtn" aria-label="Play">▶ Play</button>
+    <button class="btn" id="backBtn" aria-label="Back 10 seconds">‹ 10s</button>
+    <button class="btn" id="fwdBtn" aria-label="Forward 10 seconds">10s ›</button>
+    <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="Timeline" aria-valuemin="0" aria-valuenow="0">
+      <div class="scrub-track"><div class="scrub-fill" id="scrubFill"></div></div>
+      <div class="scrub-marks" id="scrubMarks"></div>
+    </div>
+    <div class="time" id="time">0:00 / 0:00</div>
+  </div>
+  <div class="chapters" id="chapters"></div>
+</div>
+
+<script>
+/*APP*/
+</script>
