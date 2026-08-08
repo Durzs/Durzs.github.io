@@ -162,7 +162,7 @@ E.scene({
       r.flows.push(fa); s.appendChild(fa);
     }
 
-    r.fae=E.gChip({x:1090,y:786,t:'FAETEQUINHO: 13,737 L COLLECTED · 278 STUDENTS, FREE (2014–2022)',
+    r.fae=E.gChip({x:1120,y:786,t:'FAETEQUINHO · 13,737 L · 278 STUDENTS, FREE (2014–2022)',
       fill:'#6B4FA0',stroke:'#6B4FA0',bg:'#EFE9F6',size:19,h:48});
     s.appendChild(r.fae);
     r.note=E.gChip({x:96,y:786,t:'PAID IN REAIS — COLLECTORS NEED SPENDABLE CASH',fill:P.money,stroke:P.money,bg:P.moneyPale,size:19,h:48});

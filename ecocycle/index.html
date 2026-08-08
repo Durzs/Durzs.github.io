@@ -954,7 +954,7 @@ E.scene({
       tx('EcoCycle',{x:960,y:400,size:56,f:'d',w:800,fill:'#F2F7F4',anchor:'middle',ls:'-.02em'}),
       tx('collect  ·  verify  ·  sell',{x:960,y:452,size:26,f:'m',fill:'#9FD3CE',anchor:'middle',ls:'.06em'}),
       e('path',{d:'M760,500 H1160',stroke:'#2E7E86','stroke-width':2}),
-      txl(['turns scattered oil into','a batch a company can','sign a contract for'],{x:960,y:542,size:24,f:'b',fill:'#CFE7E3',anchor:'middle',lh:32})
+      txl(['turns scattered oil into','a batch a company can','sign a contract for'],{x:960,y:516,size:24,f:'b',fill:'#CFE7E3',anchor:'middle',lh:31})
     ]);
     s.appendChild(r.bar);
 
@@ -1058,8 +1058,8 @@ E.scene({
     s.appendChild(r.bLbl);
 
     r.chips=[
-      E.gChip({x:1150,y:660,t:'CLEAR PET BOTTLE — NOTHING TO BUY',fill:P.sys,size:20}),
-      E.gChip({x:1150,y:718,t:'FREE FOR THE ESTABLISHMENT',fill:P.sys,size:20})
+      E.gChip({x:1150,y:702,t:'CLEAR PET BOTTLE — NOTHING TO BUY',fill:P.sys,size:20}),
+      E.gChip({x:1150,y:760,t:'FREE FOR THE ESTABLISHMENT',fill:P.sys,size:20})
     ];
     for(i=0;i<2;i++) s.appendChild(r.chips[i]);
 
@@ -1489,7 +1489,7 @@ E.scene({
       r.flows.push(fa); s.appendChild(fa);
     }
 
-    r.fae=E.gChip({x:1090,y:786,t:'FAETEQUINHO: 13,737 L COLLECTED · 278 STUDENTS, FREE (2014–2022)',
+    r.fae=E.gChip({x:1120,y:786,t:'FAETEQUINHO · 13,737 L · 278 STUDENTS, FREE (2014–2022)',
       fill:'#6B4FA0',stroke:'#6B4FA0',bg:'#EFE9F6',size:19,h:48});
     s.appendChild(r.fae);
     r.note=E.gChip({x:96,y:786,t:'PAID IN REAIS — COLLECTORS NEED SPENDABLE CASH',fill:P.money,stroke:P.money,bg:P.moneyPale,size:19,h:48});

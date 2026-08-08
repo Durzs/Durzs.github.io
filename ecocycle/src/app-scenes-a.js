@@ -435,7 +435,7 @@ E.scene({
       tx('EcoCycle',{x:960,y:400,size:56,f:'d',w:800,fill:'#F2F7F4',anchor:'middle',ls:'-.02em'}),
       tx('collect  ·  verify  ·  sell',{x:960,y:452,size:26,f:'m',fill:'#9FD3CE',anchor:'middle',ls:'.06em'}),
       e('path',{d:'M760,500 H1160',stroke:'#2E7E86','stroke-width':2}),
-      txl(['turns scattered oil into','a batch a company can','sign a contract for'],{x:960,y:542,size:24,f:'b',fill:'#CFE7E3',anchor:'middle',lh:32})
+      txl(['turns scattered oil into','a batch a company can','sign a contract for'],{x:960,y:516,size:24,f:'b',fill:'#CFE7E3',anchor:'middle',lh:31})
     ]);
     s.appendChild(r.bar);
 

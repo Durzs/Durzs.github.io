@@ -58,8 +58,8 @@ E.scene({
     s.appendChild(r.bLbl);
 
     r.chips=[
-      E.gChip({x:1150,y:660,t:'CLEAR PET BOTTLE — NOTHING TO BUY',fill:P.sys,size:20}),
-      E.gChip({x:1150,y:718,t:'FREE FOR THE ESTABLISHMENT',fill:P.sys,size:20})
+      E.gChip({x:1150,y:702,t:'CLEAR PET BOTTLE — NOTHING TO BUY',fill:P.sys,size:20}),
+      E.gChip({x:1150,y:760,t:'FREE FOR THE ESTABLISHMENT',fill:P.sys,size:20})
     ];
     for(i=0;i<2;i++) s.appendChild(r.chips[i]);
 
