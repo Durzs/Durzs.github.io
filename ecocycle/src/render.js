@@ -3,8 +3,10 @@ const { spawn } = require('child_process');
 const FPS = 30;
 const FFMPEG = process.env.FFMPEG || 'ffmpeg';
 const path = require('path');
-const SRC = 'file://' + path.join(__dirname, '..', 'index.html') + '?capture=1';
-const OUT = path.join(__dirname, '..', 'EcoCycle_Collector_System.mp4');
+const CUT = process.env.CUT || 'full';
+const SUFFIX = {full:'', pitch3:'_3min', short1:'_1min'}[CUT] || ('_' + CUT);
+const SRC = 'file://' + path.join(__dirname, '..', 'index.html') + '?capture=1&cut=' + CUT;
+const OUT = path.join(__dirname, '..', 'EcoCycle_Collector_System' + SUFFIX + '.mp4');
 (async () => {
   const b = await chromium.launch({args:['--force-color-profile=srgb','--font-render-hinting=none','--disable-lcd-text']});
   const p = await b.newPage({viewport:{width:1920,height:1080},deviceScaleFactor:1});

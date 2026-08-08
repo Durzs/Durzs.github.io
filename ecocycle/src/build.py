@@ -4,7 +4,7 @@ import os
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 SOURCES = ['app-core.js', 'app-scenes-a.js', 'app-scenes-b.js',
-           'app-scenes-c.js', 'app-scenes-d.js', 'app-player.js']
+           'app-scenes-c.js', 'app-scenes-d.js', 'cuts.js', 'app-player.js']
 
 def read(name):
     with open(os.path.join(BASE, name), encoding='utf-8') as fh:

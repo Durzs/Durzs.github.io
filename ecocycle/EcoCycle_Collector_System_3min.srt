@@ -1,0 +1,127 @@
+1
+00:00:01,500 --> 00:00:04,500
+How EcoCycle collects used cooking oil.
+
+2
+00:00:05,300 --> 00:00:10,300
+Thousands of small kitchens in the Pavuna–Meriti basin fry food every day.
+
+3
+00:00:10,600 --> 00:00:15,400
+Nobody buys the used oil, so it goes down the drain.
+
+4
+00:00:15,800 --> 00:00:20,400
+One litre can contaminate up to 25,000 litres of water.
+
+5
+00:00:21,200 --> 00:00:25,400
+Inside the pipes it hardens into a fatberg, and the drain blocks.
+
+6
+00:00:25,800 --> 00:00:29,700
+13,000 unblocking operations a year. The same streets flood every season.
+
+7
+00:00:30,300 --> 00:00:35,500
+The catadores who work these streets live on cardboard, at R$0.15–0.40 a kilo.
+
+8
+00:00:35,900 --> 00:00:40,700
+The oil going past them sells for R$0.80–2.50 a litre.
+
+9
+00:00:41,100 --> 00:00:44,700
+Demand for it grew over 700% in a decade. None of it reaches them.
+
+10
+00:00:45,400 --> 00:00:49,800
+The workers exist. The buyers exist.
+
+11
+00:00:50,200 --> 00:00:56,400
+What is missing is the layer in between — one that collects the oil and proves what it is.
+
+12
+00:00:57,300 --> 00:01:02,700
+One. A shop registers at the residents' association and gets a PET bottle with its own code.
+
+13
+00:01:03,100 --> 00:01:08,500
+Nothing to buy, nothing to pay. Households can join too, for Green Points.
+
+14
+00:01:09,300 --> 00:01:14,500
+Two. A catador from the local cooperative collects at the door, and scans the code.
+
+15
+00:01:14,900 --> 00:01:20,700
+One scan records four things: how much, from where, when, and who collected it.
+
+16
+00:01:21,300 --> 00:01:26,500
+The oil stops being anonymous waste. It has a history.
+
+17
+00:01:27,300 --> 00:01:32,700
+Three. Everything is pooled at a neighbourhood hub, and tested for water and dirt.
+
+18
+00:01:33,100 --> 00:01:38,500
+The batch only ships if the total matches the sum of every scan.
+
+19
+00:01:39,100 --> 00:01:43,700
+Twenty-four small pickups become one verified, contract-grade batch.
+
+20
+00:01:44,300 --> 00:01:49,700
+Four. The batch is sold under contract — to several processors, never just one.
+
+21
+00:01:50,100 --> 00:01:57,500
+PROVE depended on a single refinery. When it shut down in 2026, the collected oil had nowhere to go.
+
+22
+00:01:58,300 --> 00:02:02,900
+Five. The money comes back by a rule fixed in advance.
+
+23
+00:02:03,200 --> 00:02:09,000
+40% to the catadores who collected it; 20% to households; 20% as Green Points in local shops;
+
+24
+00:02:09,400 --> 00:02:14,600
+and 20% to the Faetequinho course, which already trades free classes for used oil.
+
+25
+00:02:15,300 --> 00:02:19,900
+Six. Every scan teaches the system.
+
+26
+00:02:20,100 --> 00:02:25,700
+It forecasts volume by zone, shortens the routes, and flags the shops about to drop out.
+
+27
+00:02:26,100 --> 00:02:31,500
+Two dashboards: one for the city, one for buyers looking for verified supply.
+
+28
+00:02:32,300 --> 00:02:40,500
+Kitchen. Scan. Hub. Contract. Payment. And data that makes the next round cheaper.
+
+29
+00:02:41,300 --> 00:02:46,100
+The Jardim América pilot: 75,678 litres recovered a year.
+
+30
+00:02:46,500 --> 00:02:52,500
+R$113,517 of revenue against R$105,000 of cost — and R$1.27 of social value per R$1 invested.
+
+31
+00:02:53,300 --> 00:02:56,200
+Same oil. A different path.
+
+32
+00:02:56,500 --> 00:02:59,700
+EcoCycle — a collection system for the last mile.

@@ -151,6 +151,13 @@ body{
 .chapters{
   width:100%;max-width:1180px;display:flex;flex-wrap:wrap;gap:7px;flex:0 0 auto;
 }
+.cutbar{
+  width:100%;max-width:1180px;display:flex;gap:8px;flex:0 0 auto;align-items:center;
+}
+.chip.cut{
+  border-color:#2E4B50;color:var(--shell-ink);padding:7px 15px;font-size:13px;letter-spacing:.05em;
+}
+.chip.cut[aria-current="true"]{background:var(--sys);border-color:var(--sys);color:#EAF5F2;font-weight:500}
 .chip{
   appearance:none;border:1px solid var(--shell-line);background:transparent;color:var(--shell-muted);
   border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:12px;cursor:pointer;
@@ -160,7 +167,7 @@ body{
 .chip[aria-current="true"]{background:var(--oil);border-color:var(--oil);color:#1B1204;font-weight:500}
 .chip:focus-visible{outline:2px solid var(--oil);outline-offset:2px}
 
-body.capture .controls,body.capture .chapters{display:none}
+body.capture .controls,body.capture .chapters,body.capture .cutbar{display:none}
 body.capture .app{padding:0;gap:0}
 body.capture .stage{border-radius:0}
 
@@ -194,6 +201,7 @@ body.capture .stage{border-radius:0}
     </div>
     <div class="time" id="time">0:00 / 0:00</div>
   </div>
+  <div class="cutbar" id="cutbar"></div>
   <div class="chapters" id="chapters"></div>
 </div>
 

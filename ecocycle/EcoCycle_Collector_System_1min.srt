@@ -1,0 +1,47 @@
+1
+00:00:02,150 --> 00:00:07,650
+Used cooking oil goes down the drain, hardens in the pipes and blocks them.
+
+2
+00:00:08,100 --> 00:00:11,800
+Blocked pipes flood the same low-income streets, every season.
+
+3
+00:00:12,100 --> 00:00:17,800
+That oil is worth several times the cardboard catadores live on — and none of it reaches them.
+
+4
+00:00:18,100 --> 00:00:21,800
+A catador collects it at the door and scans the bottle's code:
+
+5
+00:00:22,000 --> 00:00:25,800
+how much, from where, when, who.
+
+6
+00:00:26,100 --> 00:00:31,800
+Pickups are pooled and verified at a neighbourhood hub — one contract-grade batch.
+
+7
+00:00:32,100 --> 00:00:36,800
+Sold under contract to several processors, never just one.
+
+8
+00:00:37,100 --> 00:00:43,700
+40% of the revenue goes to the catadores; the rest to households, local shops and a school course.
+
+9
+00:00:44,100 --> 00:00:49,800
+Every scan sharpens the next round: forecasts, routes, retention.
+
+10
+00:00:50,100 --> 00:00:53,000
+75,678 litres recovered a year.
+
+11
+00:00:53,200 --> 00:00:56,800
+The pilot pays for itself — R$1.27 of social value per R$1.
+
+12
+00:00:57,200 --> 00:01:01,700
+EcoCycle — a collection system for the last mile.

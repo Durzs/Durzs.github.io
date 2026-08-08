@@ -1,12 +1,24 @@
 # EcoCycle — collector system demo video
 
 An animated explainer of how the EcoCycle used-cooking-oil (UCO) collection system works, built
-from the *EcoCycle Final Proposal* (Pavuna–Meriti basin, Rio de Janeiro). English, 5:04, 1920×1080.
+from the *EcoCycle Final Proposal* (Pavuna–Meriti basin, Rio de Janeiro). English, 1920×1080.
 
 - **Watch it in the browser:** [`index.html`](./index.html) — a self-contained page (no network
-  needed, fonts embedded). Plays automatically; has play/pause, a scrubber and chapter buttons.
-- **Video file:** `EcoCycle_Collector_System.mp4` (H.264, 1080p, 30 fps, no audio track).
-- **Narration:** [`NARRATION.md`](./NARRATION.md) is the full spoken script with timecodes;
+  needed, fonts embedded). Plays automatically; has play/pause, a scrubber, chapter buttons and a
+  Full / Pitch / Short switch.
+- **Three cuts**, all rendered from the same scenes:
+
+  | Cut | Length | File | Page |
+  |-----|--------|------|------|
+  | Full | 5:04 | `EcoCycle_Collector_System.mp4` | `index.html` |
+  | Pitch | 3:00 | `EcoCycle_Collector_System_3min.mp4` | `index.html?cut=pitch3` |
+  | Short | 1:02 | `EcoCycle_Collector_System_1min.mp4` | `index.html?cut=short1` |
+
+  H.264, 1080p, 30 fps, no audio track.
+- **Presenting it:** [`PITCH.md`](./PITCH.md) — what each cut prioritises, a live narration script
+  for the 3-minute cut keyed to its timecodes, a 60-second elevator script, and the figures with
+  their sources for Q&A.
+- **Narration:** [`NARRATION.md`](./NARRATION.md) is the full cut's script with timecodes;
   `EcoCycle_Collector_System.srt` is the same text as subtitles, ready to drop on the MP4 or to
   use as a voice-over script.
 
@@ -55,6 +67,8 @@ The page is generated from `src/` so the copy in this folder stays a single self
 cd src
 python3 build.py                 # writes ../index.html
 node   render.js                 # writes ../EcoCycle_Collector_System.mp4 (needs playwright + ffmpeg)
+CUT=pitch3 node render.js        # ../EcoCycle_Collector_System_3min.mp4
+CUT=short1 node render.js        # ../EcoCycle_Collector_System_1min.mp4
 ```
 
 `src/` layout:
@@ -63,13 +77,16 @@ node   render.js                 # writes ../EcoCycle_Collector_System.mp4 (need
 - `fonts.css` — the three typefaces, base64-inlined
 - `app-core.js` — timeline helpers plus the icon library (shop, catador, bottle, drum, plant, …)
 - `app-scenes-a.js` … `app-scenes-d.js` — the fourteen scenes
+- `cuts.js` — the three edits. An entry plays a window `[from, to]` of a scene's own timeline
+  mapped onto `dur` seconds of the cut, and carries its own narration, so a shorter cut is
+  re-scripted rather than merely clipped
 - `app-player.js` — the transport: `render(t)` is a pure function of time, which is what makes
   frame-exact MP4 capture possible
 - `build.py`, `render.js`
 
-To change wording, edit the `cues` array of a scene (`[start, duration, 'text']`, seconds relative
-to the scene) and rebuild. To change a scene's length, edit its `dur`; everything after it shifts
-automatically.
+To change wording in the full version, edit the `cues` array of a scene (`[start, duration,
+'text']`, seconds relative to the scene) and rebuild; for the short cuts, edit the matching entry
+in `cuts.js`. To change a scene's length, edit its `dur`; everything after it shifts automatically.
 
 ## Adding a voice-over
 

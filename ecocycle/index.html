@@ -153,6 +153,13 @@ body{
 .chapters{
   width:100%;max-width:1180px;display:flex;flex-wrap:wrap;gap:7px;flex:0 0 auto;
 }
+.cutbar{
+  width:100%;max-width:1180px;display:flex;gap:8px;flex:0 0 auto;align-items:center;
+}
+.chip.cut{
+  border-color:#2E4B50;color:var(--shell-ink);padding:7px 15px;font-size:13px;letter-spacing:.05em;
+}
+.chip.cut[aria-current="true"]{background:var(--sys);border-color:var(--sys);color:#EAF5F2;font-weight:500}
 .chip{
   appearance:none;border:1px solid var(--shell-line);background:transparent;color:var(--shell-muted);
   border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:12px;cursor:pointer;
@@ -162,7 +169,7 @@ body{
 .chip[aria-current="true"]{background:var(--oil);border-color:var(--oil);color:#1B1204;font-weight:500}
 .chip:focus-visible{outline:2px solid var(--oil);outline-offset:2px}
 
-body.capture .controls,body.capture .chapters{display:none}
+body.capture .controls,body.capture .chapters,body.capture .cutbar{display:none}
 body.capture .app{padding:0;gap:0}
 body.capture .stage{border-radius:0}
 
@@ -196,6 +203,7 @@ body.capture .stage{border-radius:0}
     </div>
     <div class="time" id="time">0:00 / 0:00</div>
   </div>
+  <div class="cutbar" id="cutbar"></div>
   <div class="chapters" id="chapters"></div>
 </div>
 
@@ -1854,9 +1862,130 @@ E.scene({
 
 })();
 
+/* ============================================================
+   CUTS — three edits of the same fourteen scenes.
+
+   An entry plays a window [from, to] of a scene's own timeline,
+   mapped onto `dur` seconds of the cut. Narration is written per
+   cut, so a shorter edit is re-scripted rather than merely clipped.
+   ============================================================ */
+(function(){
+var E=window.__EC;
+
+E.CUTS=[
+
+/* ---------------------------------------------------------- FULL */
+{ id:'full', label:'Full', note:'the whole explanation' },   /* entries filled in by the player */
+
+/* ---------------------------------------------------------- 3-MINUTE PITCH */
+{ id:'pitch3', label:'Pitch', note:'for a 3-minute slot', entries:[
+
+ {id:'title', from:0.2, to:6.4, dur:5, cues:[
+   [1.5,3.0,'How EcoCycle collects used cooking oil.']]},
+
+ {id:'drain', from:0.3, to:23, dur:16, cues:[
+   [0.3,5.0,'Thousands of small kitchens in the Pavuna–Meriti basin fry food every day.'],
+   [5.6,4.8,'Nobody buys the used oil, so it goes down the drain.'],
+   [10.8,4.6,'One litre can contaminate up to <b>25,000 litres</b> of water.'],
+   [15.6,0.3,'']]},
+
+ {id:'flood', from:1.5, to:14, dur:9, cues:[
+   [0.2,4.2,'Inside the pipes it hardens into a <u>fatberg</u>, and the drain blocks.'],
+   [4.8,3.9,'<u>13,000</u> unblocking operations a year. The same streets flood every season.']]},
+
+ {id:'gap', from:0.5, to:18.5, dur:15, cues:[
+   [0.3,5.2,'The catadores who work these streets live on cardboard, at <b>R$0.15–0.40 a kilo</b>.'],
+   [5.9,4.8,'The oil going past them sells for <b>R$0.80–2.50 a litre</b>.'],
+   [11.1,3.6,'Demand for it grew over 700% in a decade. None of it reaches them.']]},
+
+ {id:'idea', from:0.8, to:18.6, dur:12, cues:[
+   [0.4,4.4,'The workers exist. The buyers exist.'],
+   [5.2,6.2,'What is missing is the layer in between — one that collects the oil and <i>proves</i> what it is.']]},
+
+ {id:'step1', from:0.2, to:21, dur:12, cues:[
+   [0.3,5.4,"One. A shop registers at the residents' association and gets a PET bottle with its own code."],
+   [6.1,5.4,'Nothing to buy, nothing to pay. Households can join too, for <s>Green Points</s>.']]},
+
+ {id:'step2', from:0.2, to:26, dur:18, cues:[
+   [0.3,5.2,'Two. A catador from the local cooperative collects at the door, and scans the code.'],
+   [5.9,5.8,'One scan records four things: how much, from where, when, and who collected it.'],
+   [12.3,5.2,'The oil stops being anonymous waste. It has a history.']]},
+
+ {id:'step3', from:0.2, to:26.5, dur:17, cues:[
+   [0.3,5.4,'Three. Everything is pooled at a neighbourhood hub, and tested for water and dirt.'],
+   [6.1,5.4,'The batch only ships if the total matches the sum of every scan.'],
+   [12.1,4.6,'Twenty-four small pickups become one verified, contract-grade batch.']]},
+
+ {id:'step4', from:0.2, to:22.5, dur:14, cues:[
+   [0.3,5.4,'Four. The batch is sold under contract — to several processors, never just one.'],
+   [6.1,7.4,'PROVE depended on a single refinery. When it shut down in 2026, the collected oil had nowhere to go.']]},
+
+ {id:'step5', from:0.2, to:27, dur:17, cues:[
+   [0.3,4.6,'Five. The money comes back by a rule fixed in advance.'],
+   [5.2,5.8,'<s>40%</s> to the catadores who collected it; 20% to households; 20% as Green Points in local shops;'],
+   [11.4,5.2,'and 20% to the Faetequinho course, which already trades free classes for used oil.']]},
+
+ {id:'step6', from:0.2, to:28.5, dur:17, cues:[
+   [0.3,4.6,'Six. Every scan teaches the system.'],
+   [5.1,5.6,'It forecasts volume by zone, shortens the routes, and flags the shops about to drop out.'],
+   [11.1,5.4,'Two dashboards: one for the city, one for buyers looking for verified supply.']]},
+
+ {id:'recap', from:0.2, to:18, dur:9, cues:[
+   [0.3,8.2,'Kitchen. Scan. Hub. Contract. Payment. And data that makes the next round cheaper.']]},
+
+ {id:'results', from:0.2, to:18, dur:12, cues:[
+   [0.3,4.8,'The Jardim América pilot: <b>75,678 litres</b> recovered a year.'],
+   [5.5,6.0,'R$113,517 of revenue against R$105,000 of cost — and R$1.27 of social value per R$1 invested.']]},
+
+ {id:'close', from:0.2, to:10, dur:7, cues:[
+   [0.3,2.9,'Same oil. A different path.'],
+   [3.5,3.2,'EcoCycle — a collection system for the last mile.']]}
+]},
+
+/* ---------------------------------------------------------- 1-MINUTE SHORT */
+{ id:'short1', label:'Short', note:'the 60-second version', entries:[
+
+ {id:'title', from:0.6, to:6.4, dur:2, cues:[]},
+
+ {id:'drain', from:2.0, to:22, dur:6, cues:[
+   [0.15,5.5,'Used cooking oil goes down the drain, hardens in the pipes and blocks them.']]},
+
+ {id:'flood', from:2.0, to:12, dur:4, cues:[
+   [0.1,3.7,'Blocked pipes flood the same low-income streets, every season.']]},
+
+ {id:'gap', from:1.0, to:18, dur:6, cues:[
+   [0.1,5.7,'That oil is worth several times the cardboard catadores live on — and none of it reaches them.']]},
+
+ {id:'step2', from:5.0, to:24, dur:8, cues:[
+   [0.1,3.7,"A catador collects it at the door and scans the bottle's code:"],
+   [4.0,3.8,'how much, from where, when, who.']]},
+
+ {id:'step3', from:8.0, to:26, dur:6, cues:[
+   [0.1,5.7,'Pickups are pooled and verified at a neighbourhood hub — one contract-grade batch.']]},
+
+ {id:'step4', from:0.2, to:7.0, dur:5, cues:[
+   [0.1,4.7,'Sold under contract to several processors, never just one.']]},
+
+ {id:'step5', from:1.2, to:17, dur:7, cues:[
+   [0.1,6.6,'<s>40%</s> of the revenue goes to the catadores; the rest to households, local shops and a school course.']]},
+
+ {id:'step6', from:4.0, to:24, dur:6, cues:[
+   [0.1,5.7,'Every scan sharpens the next round: forecasts, routes, retention.']]},
+
+ {id:'results', from:0.2, to:17, dur:7, cues:[
+   [0.1,2.9,'<b>75,678 litres</b> recovered a year.'],
+   [3.2,3.6,'The pilot pays for itself — R$1.27 of social value per R$1.']]},
+
+ {id:'close', from:0.2, to:9, dur:5, cues:[
+   [0.2,4.5,'EcoCycle — a collection system for the last mile.']]}
+]}
+
+];
+})();
+
 /* ===================== PLAYER ===================== */
 (function(){
-var E=window.__EC, S=E.SCENES;
+var E=window.__EC, S=E.SCENES, CUTS=E.CUTS;
 var film=document.getElementById('film'),
     stage=document.getElementById('stage'),
     capEl=document.getElementById('cap'),
@@ -1868,22 +1997,56 @@ var film=document.getElementById('film'),
     frame=document.getElementById('frame'),
     wrap=frame.parentNode;
 
-var XF=0.34;               /* cross-fade between scenes, seconds */
-var T=0, i;
+var XF=0.34;               /* cross-fade between entries, seconds */
+var i, byId={};
 
-/* ---- mount scenes ---- */
+/* ---- mount every scene once; cuts reuse them ---- */
 for(i=0;i<S.length;i++){
   var sc=S[i];
-  sc.t0=T; T+=sc.dur; sc.t1=T;
   var d=document.createElement('div');
   d.className='scene'; d.style.visibility='hidden';
   var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.setAttribute('viewBox','0 0 1920 1080');
   svg.setAttribute('preserveAspectRatio','xMidYMid meet');
   d.appendChild(svg); film.appendChild(d);
-  sc.el=d; sc.svg=svg;
+  sc.el=d; sc.svg=svg; byId[sc.id]=sc;
   sc.build(svg);
 }
+
+/* the full cut is every scene, at its own pace */
+for(i=0;i<CUTS.length;i++) if(CUTS[i].id==='full'){
+  CUTS[i].entries=S.map(function(sc){
+    return {id:sc.id,from:0,to:sc.dur,dur:sc.dur,cues:sc.cues||[]};
+  });
+}
+
+/* ---- program: the active cut, laid out on one timeline ---- */
+var PROG=[], T=0, CUT=null;
+function loadCut(id){
+  var cut=null;
+  for(var k=0;k<CUTS.length;k++) if(CUTS[k].id===id) cut=CUTS[k];
+  if(!cut) cut=CUTS[0];
+  CUT=cut; PROG=[]; T=0;
+  for(var j=0;j<cut.entries.length;j++){
+    var en=cut.entries[j], sc=byId[en.id];
+    if(!sc) continue;
+    PROG.push({
+      sc:sc, t0:T, dur:en.dur, from:en.from, to:en.to,
+      cues:en.cues||sc.cues||[],
+      chapter:en.chapter||sc.chapter,
+      eyebrow:en.eyebrow||sc.eyebrow,
+      title:en.title||sc.title
+    });
+    T+=en.dur;
+  }
+  buildChapters(); buildMarks(); lastTitle=null; lastCap=null;
+  if(cutBtns.length) for(var q=0;q<cutBtns.length;q++)
+    cutBtns[q].b.setAttribute('aria-current', cutBtns[q].id===cut.id ? 'true':'false');
+  return T;
+}
+/* native time inside a scene for a given entry-local time */
+function nat(en,lt){ return en.from + (en.to-en.from)*(en.dur?cl01(lt/en.dur):0); }
+function cl01(v){ return v<0?0:(v>1?1:v); }
 
 /* ---- step chips ---- */
 var chips=[];
@@ -1893,82 +2056,106 @@ for(i=0;i<6;i++){
   stepsEl.appendChild(c); chips.push(c);
 }
 
-/* ---- chapters ---- */
+/* ---- chapters + timeline marks ---- */
 var chapEl=document.getElementById('chapters'), chapBtns=[];
-for(i=0;i<S.length;i++){
-  (function(sc){
-    if(!sc.chapter) return;
-    var b=document.createElement('button');
-    b.className='chip'; b.type='button'; b.textContent=sc.chapter;
-    b.addEventListener('click',function(){ seek(sc.t0+0.01); });
-    chapEl.appendChild(b); chapBtns.push({b:b,sc:sc});
-  })(S[i]);
-}
-/* timeline marks */
 var marks=document.getElementById('scrubMarks');
-for(i=1;i<S.length;i++){
-  var m=document.createElement('i'); m.style.left=(S[i].t0/T*100)+'%'; marks.appendChild(m);
+function buildChapters(){
+  chapEl.innerHTML=''; chapBtns=[];
+  for(var k=0;k<PROG.length;k++) (function(en){
+    if(!en.chapter) return;
+    var b=document.createElement('button');
+    b.className='chip'; b.type='button'; b.textContent=en.chapter;
+    b.addEventListener('click',function(){ seek(en.t0+0.01); });
+    chapEl.appendChild(b); chapBtns.push({b:b,en:en});
+  })(PROG[k]);
+}
+function buildMarks(){
+  marks.innerHTML='';
+  for(var k=1;k<PROG.length;k++){
+    var m=document.createElement('i'); m.style.left=(PROG[k].t0/T*100)+'%'; marks.appendChild(m);
+  }
+}
+
+/* ---- cut selector ---- */
+var cutEl=document.getElementById('cutbar'), cutBtns=[];
+function buildCutBar(){
+  if(!cutEl) return;
+  cutEl.innerHTML='';
+  for(var k=0;k<CUTS.length;k++) (function(cut){
+    var total=0;
+    for(var j=0;j<cut.entries.length;j++) total+=cut.entries[j].dur;
+    var b=document.createElement('button');
+    b.className='chip cut'; b.type='button';
+    b.textContent=cut.label+' · '+fmt(total);
+    b.title=cut.note||'';
+    b.addEventListener('click',function(){
+      var wasPlaying=playing; pause();
+      loadCut(cut.id); now=0; render(0);
+      if(wasPlaying) play();
+    });
+    cutEl.appendChild(b); cutBtns.push({b:b,id:cut.id});
+  })(CUTS[k]);
 }
 
 /* ---- render ---- */
-var lastCap=null, lastTitle=null, curScene=null;
+var lastCap=null, lastTitle=null;
 
-function findScene(t){
-  for(var k=S.length-1;k>=0;k--) if(t>=S[k].t0) return k;
+function findEntry(t){
+  for(var k=PROG.length-1;k>=0;k--) if(t>=PROG[k].t0) return k;
   return 0;
 }
 function fadeAmt(x,a,b){ return x<a?0:(x>b?1:(x-a)/(b-a)); }
 
 function render(t){
   t=Math.max(0,Math.min(T-0.001,t));
-  var k=findScene(t), sc=S[k], lt=t-sc.t0, prev=k>0?S[k-1]:null;
+  var k=findEntry(t), en=PROG[k], lt=t-en.t0, prev=k>0?PROG[k-1]:null;
+  var sc=en.sc, ntime=nat(en,lt);
 
-  /* visibility + crossfade */
+  /* visibility + crossfade (a scene can appear in several entries, never adjacent) */
   for(var j=0;j<S.length;j++){
-    var vis=(j===k)||(prev&&j===k-1&&lt<XF);
+    var vis=(S[j]===sc)||(prev&&S[j]===prev.sc&&lt<XF);
     if(S[j].el.style.visibility!==(vis?'visible':'hidden'))
       S[j].el.style.visibility=vis?'visible':'hidden';
     if(!vis) S[j].el.style.opacity=0;
   }
-  if(prev&&lt<XF){
-    prev.el.style.opacity=String(1-lt/XF);
-    prev.update(Math.min(prev.dur,prev.dur-0.001));
+  if(prev&&lt<XF&&prev.sc!==sc){
+    prev.sc.el.style.opacity=String(1-lt/XF);
+    prev.sc.update(Math.min(prev.sc.dur-0.001,prev.to));
     sc.el.style.opacity=String(lt/XF);
   } else {
     sc.el.style.opacity='1';
   }
-  sc.update(lt);
-  curScene=sc;
+  sc.update(ntime);
 
   /* theme */
-  var dark = sc.darkAt ? sc.darkAt(lt) : !!sc.dark;
+  var dark = sc.darkAt ? sc.darkAt(ntime) : !!sc.dark;
   stage.classList.toggle('dark',dark);
-  stage.style.background = sc.bg ? sc.bg(lt) : (dark?'#0D1719':'#E9EDE6');
+  stage.style.background = sc.bg ? sc.bg(ntime) : (dark?'#0D1719':'#E9EDE6');
 
   /* header */
   var showH = !sc.hideHeader;
-  var hA = showH ? fadeAmt(lt,0.15,0.9)*(1-fadeAmt(lt,sc.dur-0.5,sc.dur-0.05)) : 0;
+  var hA = showH ? fadeAmt(lt,0.15,0.9)*(1-fadeAmt(lt,en.dur-0.5,en.dur-0.05)) : 0;
   eyeEl.style.opacity=hA; titleEl.style.opacity=hA;
   eyeEl.style.transform='translateY('+((1-hA)*10)+'px)';
   titleEl.style.transform='translateY('+((1-hA)*14)+'px)';
-  if(lastTitle!==sc.id){
-    eyeT.textContent=sc.eyebrow||''; titleEl.textContent=sc.title||''; lastTitle=sc.id;
+  if(lastTitle!==en.t0+'|'+sc.id){
+    eyeT.textContent=en.eyebrow||''; titleEl.textContent=en.title||'';
+    lastTitle=en.t0+'|'+sc.id;
   }
 
   /* step chips */
   var showSteps = !!sc.step;
   stepsEl.style.opacity = showSteps ? hA : 0;
-  if(showSteps) for(var q=0;q<6;q++){
+  if(showSteps) for(var q=0;q<6;q++)
     chips[q].className='step-chip'+(q+1===sc.step?' on':(q+1<sc.step?' done':''));
-  }
 
   /* caption */
   var html='', a=0;
-  if(sc.cues) for(var c=0;c<sc.cues.length;c++){
-    var cu=sc.cues[c], s0=cu[0], s1=cu[0]+cu[1];
+  for(var c=0;c<en.cues.length;c++){
+    var cu=en.cues[c], s0=cu[0], s1=cu[0]+cu[1];
     if(lt>=s0-0.25&&lt<=s1+0.3){
       html=cu[2];
-      a=fadeAmt(lt,s0,s0+0.22)*(1-fadeAmt(lt,s1-0.02,s1+0.26));
+      a=fadeAmt(lt,s0,s0+0.2)*(1-fadeAmt(lt,s1-0.02,s1+0.24));
       break;
     }
   }
@@ -1978,12 +2165,11 @@ function render(t){
 
   progEl.style.width=(t/T*100)+'%';
 
-  /* ui */
   if(!CAPTURE){
     fill.style.width=(t/T*100)+'%';
     timeEl.textContent=fmt(t)+' / '+fmt(T);
     for(var z=0;z<chapBtns.length;z++)
-      chapBtns[z].b.setAttribute('aria-current', chapBtns[z].sc===sc ? 'true':'false');
+      chapBtns[z].b.setAttribute('aria-current', chapBtns[z].en===en ? 'true':'false');
   }
   now=t;
 }
@@ -1996,7 +2182,7 @@ var playBtn=document.getElementById('playBtn'),
     scrub=document.getElementById('scrub');
 var CAPTURE=/[?&]capture=1/.test(location.search);
 
-function fmt(s){ var m=Math.floor(s/60), x=Math.floor(s%60); return m+':'+(x<10?'0':'')+x; }
+function fmt(s){ var m=Math.floor(s/60), x=Math.round(s%60); if(x===60){m++;x=0;} return m+':'+(x<10?'0':'')+x; }
 function tick(){
   if(!playing) return;
   var t=anchorT+(performance.now()-anchor)/1000;
@@ -2042,7 +2228,7 @@ document.addEventListener('keydown',function(ev){
 function resize(){
   var pad=CAPTURE?0:32;
   var availW=window.innerWidth-pad;
-  var availH=window.innerHeight-(CAPTURE?0:150);
+  var availH=window.innerHeight-(CAPTURE?0:186);
   var s=Math.min(availW/1920,availH/1080);
   if(CAPTURE) s=1;
   frame.style.transform='scale('+s+')';
@@ -2050,19 +2236,28 @@ function resize(){
   wrap.style.height=(1080*s)+'px';
 }
 window.addEventListener('resize',resize);
+
+/* ---- boot ---- */
+if(CAPTURE) document.body.classList.add('capture');
+buildCutBar();
+var m=/[?&]cut=([a-z0-9]+)/i.exec(location.search);
+loadCut(m?m[1]:'full');
 resize();
 
-/* ---- capture hooks ---- */
-if(CAPTURE) document.body.classList.add('capture');
-window.__ec={ seek:function(t){ render(t); }, duration:T, scenes:S.map(function(s){return {id:s.id,t0:s.t0,dur:s.dur};}) };
+window.__ec={
+  seek:function(t){ render(t); },
+  get duration(){ return T; },
+  setCut:function(id){ loadCut(id); render(0); return T; },
+  cuts:CUTS.map(function(c){ return c.id; }),
+  scenes:function(){ return PROG.map(function(en){ return {id:en.sc.id,t0:en.t0,dur:en.dur,cues:en.cues}; }); }
+};
 
-/* ---- go ---- */
 function boot(){
   resize(); render(0);
   window.__ecReady=true;
-  if(!CAPTURE && !/[?&]paused=1/.test(location.search)) play();
-  var m=/[?&]t=([0-9.]+)/.exec(location.search);
-  if(m){ pause(); seek(parseFloat(m[1])); }
+  var st=/[?&]t=([0-9.]+)/.exec(location.search);
+  if(st){ seek(parseFloat(st[1])); }
+  else if(!CAPTURE && !/[?&]paused=1/.test(location.search)) play();
 }
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(boot); else setTimeout(boot,300);
 })();
