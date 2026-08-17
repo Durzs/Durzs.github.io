@@ -11,6 +11,11 @@ Three cuts of the same film, and what to say over them.
 All three play from the same page: `index.html` has a Full / Pitch / Short switch under
 the timeline, or open it with `?cut=pitch3` / `?cut=short1`.
 
+For a free-sharing table with the one-slide poster instead of the film, print
+[`EcoCycle_2min_pitch_script.pdf`](./EcoCycle_2min_pitch_script.pdf) — a two-page rehearsal card:
+the 2-minute spoken script with the technique behind each beat, plus a 20-second loop for people
+who arrive mid-pitch, staging notes and the three questions that always come.
+
 ---
 
 ## What each cut prioritises

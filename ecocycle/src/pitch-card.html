@@ -1,0 +1,234 @@
+<meta charset="utf-8">
+<title>EcoCycle — guion de 2 minutos</title>
+<style>
+/*FONTS*/
+@page { size: A4; margin: 0; }
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Public Sans',system-ui,sans-serif;
+  color:#12211F; background:#fff;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+.page{
+  width:210mm; height:297mm; padding:14mm 14mm 12mm;
+  display:flex; flex-direction:column; page-break-after:always; position:relative;
+}
+.page:last-child{page-break-after:auto}
+
+/* header */
+.masthead{display:flex; align-items:baseline; gap:10px; border-bottom:2px solid #12211F; padding-bottom:6px}
+.logo{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:19pt; letter-spacing:-.02em}
+.mast-sub{font-family:'IBM Plex Mono',monospace; font-size:7.4pt; letter-spacing:.16em; text-transform:uppercase; color:#5C6E6A}
+.mast-right{margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:7.4pt; letter-spacing:.14em; color:#0E5A63}
+
+h1{
+  break-after:avoid;
+  font-family:'Bricolage Grotesque',sans-serif; font-weight:800;
+  font-size:19.5pt; line-height:1.05; letter-spacing:-.022em; margin:4.5mm 0 1.5mm;
+}
+.kicker{font-family:'IBM Plex Mono',monospace; font-size:8pt; letter-spacing:.14em; color:#B87516; text-transform:uppercase}
+.lede{font-size:9pt; line-height:1.4; color:#5C6E6A; margin:0 0 3.5mm; max-width:165mm}
+
+/* script blocks */
+.block{display:grid; grid-template-columns:24mm 1fr; gap:5mm; padding:2.3mm 0; border-top:1px solid #DCE2DC; break-inside:avoid}
+.block:first-of-type{border-top:2px solid #12211F}
+.rail .t{font-family:'IBM Plex Mono',monospace; font-size:9.4pt; font-weight:500; color:#12211F; letter-spacing:-.01em}
+.rail .tech{
+  font-family:'IBM Plex Mono',monospace; font-size:6.9pt; letter-spacing:.09em; text-transform:uppercase;
+  color:#0E5A63; margin-top:1.6mm; line-height:1.35;
+}
+.say{
+  font-size:11pt; line-height:1.31; font-weight:500; letter-spacing:-.006em; margin:0;
+}
+.say b{font-weight:700; color:#B87516}
+.say .beat{color:#9AA8A4; font-weight:500; font-style:italic}
+.note{font-size:8.1pt; line-height:1.38; color:#5C6E6A; margin:1.5mm 0 0}
+.note strong{color:#12211F; font-weight:600}
+
+/* page 2 pieces */
+.h2{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:13pt; letter-spacing:-.015em; margin:0 0 2.5mm}
+.loop{
+  border:2px solid #B87516; border-radius:3mm; padding:5mm 6mm; margin-bottom:6mm; background:#FDF6EA;
+}
+.loop .lab{font-family:'IBM Plex Mono',monospace; font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase; color:#B87516; margin-bottom:2mm}
+.loop p{font-size:11.4pt; line-height:1.38; font-weight:500; margin:0}
+.two{display:grid; grid-template-columns:1fr 1fr; gap:7mm}
+.stack{display:flex; flex-direction:column; gap:3mm}
+.item{break-inside:avoid}
+.item .q{font-size:9.4pt; font-weight:700; color:#0E5A63; margin:0 0 1mm}
+.item .a{font-size:9.4pt; line-height:1.4; margin:0}
+ul.tips{margin:0; padding-left:4.5mm}
+ul.tips li{font-size:9.4pt; line-height:1.45; margin-bottom:2mm}
+ul.tips li strong{font-weight:700}
+.fix{border-left:3px solid #C8452F; padding-left:4mm; margin-bottom:3.5mm}
+.fix .q{color:#C8452F}
+.foot{
+  margin-top:auto; padding-top:4mm; border-top:1px solid #DCE2DC;
+  font-family:'IBM Plex Mono',monospace; font-size:7pt; letter-spacing:.1em; color:#8B9995;
+  display:flex; justify-content:space-between;
+}
+.timer{
+  font-family:'IBM Plex Mono',monospace; font-size:7.6pt; letter-spacing:.1em; color:#5C6E6A;
+  border:1px solid #DCE2DC; border-radius:99px; padding:1.4mm 3.5mm; display:inline-block;
+}
+</style>
+
+<!-- ============================= PAGE 1 ============================= -->
+<div class="page">
+  <div class="masthead">
+    <span class="logo">EcoCycle</span>
+    <span class="mast-sub">Pavuna–Meriti · Rio de Janeiro</span>
+    <span class="mast-right">Free sharing · tarjeta de ensayo</span>
+  </div>
+
+  <div class="kicker">Guion hablado · 2:00 · una slide</div>
+  <h1>Used cooking oil goes down the drain<br>and the river comes back up.</h1>
+  <p class="lede">Ritmo ~145 palabras/min · ≈290 palabras. Izquierda: reloj y técnica. Derecha: exactamente lo que decís — las notas en gris no se dicen.</p>
+
+  <div class="block">
+    <div class="rail"><div class="t">0:00</div><div class="tech">Arranque en frío · objeto físico</div></div>
+    <div>
+      <p class="say">“This is used cooking oil. <span class="beat">[pausa 1s]</span> In the Pavuna–Meriti
+        basin, in Rio, nobody buys it — so it goes down the kitchen drain. And a few months later it
+        comes back, as the flood in that same street.”</p>
+      <p class="note">No digas tu nombre todavía: el nombre se gana después del gancho. <strong>No leas
+        el titular</strong> — la slide ya lo dice, vos lo actuás. Si podés, sostené una botella PET con
+        aceite usado durante esta frase.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="rail"><div class="t">0:15</div><div class="tech">Un número protagonista</div></div>
+    <div>
+      <p class="say">“It hardens inside the pipes and traps everything else. <b>One litre can contaminate
+        twenty-five thousand litres of water.</b> Brazil recycles under ten percent of its recoverable
+        oil — and industrial demand for that same oil grew seven hundred percent in a decade.”</p>
+      <p class="note">Bajá volumen y velocidad justo antes de “twenty-five thousand”. El silencio es el
+        subrayado; los otros dos datos van de apoyo, no compiten.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="rail"><div class="t">0:35</div><div class="tech">El giro · reframe</div></div>
+    <div>
+      <p class="say">“So this is <b>not a garbage problem. It's a collection problem.</b> The buyers
+        already exist. The workers already exist — the catadores walk these streets every day, living on
+        cardboard at fifteen centavos a kilo.”</p>
+      <p class="note">Es la frase que la gente repite después. Dos negaciones cortas y un contraste de
+        precio. Acá recién te presentás, si querés: <em>“I'm Diego, this is EcoCycle.”</em></p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="rail"><div class="t">0:50</div><div class="tech">Regla de tres · señalización</div></div>
+    <div>
+      <p class="say">“What's missing is the layer in between, and it does <b>three things</b>. It
+        <b>collects</b>: a catador picks up a bottle at the door and scans a code — volume, origin, time,
+        collector. It <b>verifies</b>: pickups are pooled at a neighbourhood hub, and only ship if the
+        weight matches every scan. And it <b>sells</b>: one verified batch, under contract, to several
+        processors — never just one, because the last programme here died with its single refinery.”</p>
+      <p class="note">Único momento en que tocás la slide: señalá los dos chips (<em>QR traceability</em>,
+        <em>AI</em>) al decir “collects” y “verifies”. Una mano, un gesto, y volvés al público.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="rail"><div class="t">1:20</div><div class="tech">La prueba</div></div>
+    <div>
+      <p class="say">“That turns scattered waste into contract-grade supply. In the Jardim América pilot:
+        <b>seventy-five thousand litres a year</b>. A dollar and eight cents back for every dollar spent —
+        <span class="beat">[pausa]</span> it pays for itself. And a dollar twenty-seven of social value
+        per dollar invested.”</p>
+      <p class="note">Recién acá abrís el panel de números: ya se los ganaste. Media pausa antes de
+        “it pays for itself” — esa frase desarma al escéptico.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="rail"><div class="t">1:40</div><div class="tech">Callback · invitación</div></div>
+    <div>
+      <p class="say">“And the split is fixed in advance: forty percent to the catadores who collected it;
+        the rest to households, to local shops, and to a school course that already trades free classes
+        for used oil. <span class="beat">[pausa]</span> <b>Same oil. It just stops coming back up.</b>
+        — Come ask me anything.”</p>
+      <p class="note">Cierre circular con el titular de la slide. En un free sharing el final no es un
+        <em>ask</em>, es una invitación: dejá la última frase corta y quedate en silencio.</p>
+    </div>
+  </div>
+
+  <div class="foot"><span>EcoCycle · guion de 2 minutos</span><span>1 / 2</span></div>
+</div>
+
+<!-- ============================= PAGE 2 ============================= -->
+<div class="page">
+  <div class="masthead">
+    <span class="logo">EcoCycle</span>
+    <span class="mast-sub">Free sharing · reverso</span>
+    <span class="mast-right">Loop · escena · preguntas</span>
+  </div>
+
+  <h1 style="font-size:19pt; margin-top:6mm">El reverso: lo que sostiene los dos minutos</h1>
+
+  <div class="loop">
+    <div class="lab">Loop de 20 s · para el que llega a mitad del pitch — no reinicies</div>
+    <p>“Used cooking oil has no buyer at the neighbourhood scale, so it blocks the drains and floods the
+      street. We pay catadores to collect it door to door, verify each batch with a QR chain of custody,
+      and sell it under contract. The pilot pays for itself and returns one twenty-seven in social value
+      per dollar.”</p>
+  </div>
+
+  <div class="two">
+    <div>
+      <div class="h2">Puesta en escena</div>
+      <ul class="tips">
+        <li><strong>Parate a la izquierda de la pantalla.</strong> La gente lee de izquierda a derecha:
+          primero vos, después el titular.</li>
+        <li><strong>Tocá la slide 3 veces como máximo</strong>, todas dentro del bloque de 0:50.</li>
+        <li>Manos a la altura de la cintura, palmas visibles. Nada de bolsillos.</li>
+        <li><strong>Una persona por bloque:</strong> mirá a alguien distinto en cada uno de los seis, no al panel.</li>
+        <li>Si hay ruido, la primera frase va más lenta y más fuerte de lo que te sale natural.</li>
+        <li>Ensayá en voz alta con cronómetro: si te pasás de 2:10, recortá el bloque de 0:15, nunca el de 0:50.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="h2">Las tres preguntas que van a caer</div>
+      <div class="stack">
+        <div class="item">
+          <p class="q">¿Y si un comprador informal paga más en efectivo?</p>
+          <p class="a">“He can match the price. He can't match the package: instant credit, Green Points
+            spendable in the local shops, and the visible link to the school course.”</p>
+        </div>
+        <div class="item">
+          <p class="q">¿Cómo evitan que adulteren el aceite con agua?</p>
+          <p class="a">“Visual check through the clear PET at the door, density test at the hub, and every
+            batch traces back to the wallet that supplied it.”</p>
+        </div>
+        <div class="item">
+          <p class="q">¿Por qué esto llega a la última milla si los programas actuales no llegan?</p>
+          <p class="a">“Because the collectors already live there. Drop-off networks ask residents to
+            travel; we send recognized local collectors door to door.”</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:7mm">
+    <div class="h2">Dos cosas de la slide, antes de imprimirla</div>
+    <div class="two">
+      <div class="fix">
+        <p class="q" style="font-weight:700; font-size:9.4pt; margin:0 0 1mm">Hay un tercer chip cortado</p>
+        <p class="a">Queda por debajo de <em>“AI: forecast by zone · route · churn alerts”</em> y el borde
+          inferior lo parte. Subilo o eliminalo: cortado se lee como error, no como diseño.</p>
+      </div>
+      <div class="fix">
+        <p class="q" style="font-weight:700; font-size:9.4pt; margin:0 0 1mm">La slide dice US$, el modelo está en R$</p>
+        <p class="a">1.08 y 1.27 son ratios y se sostienen en cualquier moneda. Si preguntan: “the model is
+          in reais; those two are ratios.” Si preferís, cambiá las etiquetas a R$ y queda alineado con el paper.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><span>EcoCycle · Thaís Mendes · Diego Urzúa · Caio Galdino · 吴宗琴 · 孙滢斐</span><span>2 / 2</span></div>
+</div>

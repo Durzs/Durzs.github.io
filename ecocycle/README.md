@@ -15,7 +15,10 @@ from the *EcoCycle Final Proposal* (Pavuna–Meriti basin, Rio de Janeiro). Engl
   | Short | 1:02 | `EcoCycle_Collector_System_1min.mp4` | `index.html?cut=short1` |
 
   H.264, 1080p, 30 fps, no audio track.
-- **Presenting it:** [`PITCH.md`](./PITCH.md) — what each cut prioritises, a live narration script
+- **Presenting it:** [`EcoCycle_2min_pitch_script.pdf`](./EcoCycle_2min_pitch_script.pdf) is a
+  printable two-page rehearsal card for the one-slide, 2-minute version (source:
+  `src/pitch-card.html`, build with `python3 src/pitch-card-build.py` then print to PDF).
+  [`PITCH.md`](./PITCH.md) — what each cut prioritises, a live narration script
   for the 3-minute cut keyed to its timecodes, a 60-second elevator script, and the figures with
   their sources for Q&A.
 - **Narration:** [`NARRATION.md`](./NARRATION.md) is the full cut's script with timecodes;
