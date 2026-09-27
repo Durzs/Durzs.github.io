@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AprendeLocal · Intro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@800&family=Newsreader:ital,opsz,wght@0,6..72,500;1,6..72,500&display=block" rel="stylesheet">
+<style>
+  :root {
+    --azul: #172B87;
+    --azul-medio: #2A3CA8;
+    --naranjo: #C9612A;
+    --papel: #E4DED2;
+    --noche: #070D29; /* #172B87 al 30 %: el «negro azulado» del plano 1, no es un color nuevo */
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--noche); color: var(--papel); font: 500 15px/1.45 system-ui, sans-serif; }
+  #app { display: flex; flex-direction: column; height: 100%; }
+  #escena { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  #stage { display: block; outline: 1px solid rgba(228, 222, 210, .12); }
+  #controles { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 12px 16px 16px; border-top: 1px solid rgba(228, 222, 210, .12); }
+  button { font: inherit; color: var(--papel); background: transparent; border: 1px solid rgba(228, 222, 210, .35); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  button:hover { border-color: var(--papel); }
+  button[aria-pressed="true"] { background: var(--papel); color: var(--azul); border-color: var(--papel); }
+  #barra { flex: 1 1 220px; accent-color: var(--naranjo); }
+  #tiempo { font-variant-numeric: tabular-nums; min-width: 8ch; }
+  #plano { opacity: .8; }
+  .formato { display: inline-flex; gap: 6px; }
+  details { flex-basis: 100%; }
+  summary { cursor: pointer; opacity: .85; }
+  details label { display: flex; gap: 8px; align-items: flex-start; margin: 10px 0; max-width: 78ch; }
+  details small { display: block; opacity: .7; }
+  .limpio #controles { display: none; }
+  .limpio #escena { padding: 0; }
+  .limpio #stage { outline: none; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="escena">
+    <svg id="stage" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Intro de marca de AprendeLocal"></svg>
+  </div>
+  <div id="controles">
+    <button id="bPlay" type="button">Pausa</button>
+    <button id="bReiniciar" type="button">Reiniciar</button>
+    <input id="barra" type="range" min="0" max="25" step="0.01" value="0" aria-label="Línea de tiempo">
+    <span id="tiempo">0,00 s</span>
+    <span id="plano"></span>
+    <span class="formato" role="group" aria-label="Formato">
+      <button type="button" data-formato="16x9">16:9 · 1920×1080</button>
+      <button type="button" data-formato="9x16">9:16 · 1080×1920</button>
+    </span>
+    <details>
+      <summary>Elementos que requieren consulta previa a la comunidad (desactivados por defecto)</summary>
+      <label><input type="checkbox" data-consulta="nombresMapuzugun">
+        <span>Nombres en mapuzugun que ya usa la plataforma: pewen, pigda y chumaihuén junto al nombre científico, y Rukapillán junto a Villarrica.
+        <small>Salen del catálogo de la plataforma (nativas.ts). Grafemario, escritura y pertinencia de mostrarlos se definen con la comunidad.</small></span></label>
+      <label><input type="checkbox" data-consulta="fotoEstudiantes">
+        <span>Recuadro para fotografía de estudiantes y docentes midiendo el estero.
+        <small>Requiere además consentimiento informado de familias y docentes. Es un marcador de producción, no una imagen final.</small></span></label>
+    </details>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ==========================================================================
+   AprendeLocal · intro de marca (25 s)
+   Todo se dibuja con SVG y se anima por código. La escena es una función pura
+   del tiempo: render(t) deja el cuadro exacto del segundo t. Por eso se puede
+   pausar, arrastrar la barra y exportar cuadro a cuadro sin perder precisión.
+   ========================================================================== */
+
+/* ---------- Marca: valores obligatorios, no se agregan otros ---------- */
+const C = {
+  azul: '#172B87', azulMedio: '#2A3CA8',
+  naranjo: '#C9612A', ocre: '#E0A05C',
+  papel: '#E4DED2', crema: '#FFF3E4', acuarela: '#F4EFE5',
+};
+/* Negro azulado del plano 1: es el mismo #172B87 oscurecido al 30 %. */
+const NOCHE = '#070D29';
+
+/* ---------- Logo oficial ----------
+   Curvas copiadas sin tocar de Durzs/AprendeLocal,
+   src/frontend/src/shared/components/ui/AprendeLocalLogo.tsx.
+   Ahí el color de monte y letras se llama CREMA y vale #e4ded2 (el «papel
+   crudo» del brief). El punto naranjo no cambia en ninguna variante. */
+const MONTE = "M43.4 79.7C43.4 79.5 42.9 79.2 42.4 79.1C37.9 77.7 34.9 71.1 36.5 66.2C39.7 56.7 52.7 55.8 57.0 64.9C59.4 69.9 56.1 77.9 51.1 79.1C50.8 79.2 50.4 79.5 50.3 79.7C50.1 80.1 43.6 80.2 43.4 79.7ZM76.9 78.7C76.5 78.6 75.4 78.3 74.5 78.1C72.5 77.6 69.6 76.2 67.9 74.9C66.6 73.9 64.3 71.5 64.3 71.2C64.3 71.1 64.0 70.7 63.7 70.3C62.8 69.2 60.5 64.6 59.5 61.9C59.2 61.0 58.7 59.9 58.5 59.4C58.2 58.8 58.0 58.3 58.0 58.1C58.0 58.0 57.6 56.9 57.1 55.7C56.6 54.6 56.1 53.3 56.0 52.8C55.9 52.4 55.7 51.8 55.5 51.6C55.4 51.5 55.1 51.0 55.0 50.6C54.9 50.2 54.5 49.1 54.1 48.1C53.2 45.6 53.3 45.1 54.6 44.0C55.1 43.4 55.9 42.7 56.2 42.4C57.1 41.6 56.6 39.0 55.4 38.0C55.2 37.8 55.0 37.6 55.0 37.5C55.0 37.3 54.0 35.7 53.6 35.1C53.4 35.0 53.0 34.2 52.5 33.4C49.4 28.2 48.6 27.2 47.2 27.3C46.2 27.3 44.5 29.2 42.8 32.3C41.7 34.1 40.7 35.7 40.4 36.0C40.2 36.2 40.0 36.4 40.0 36.6C40.0 36.7 39.5 37.5 39.0 38.4C37.6 40.5 37.7 43.2 39.2 43.3C40.7 43.3 41.4 45.8 40.4 47.9C40.0 48.6 39.5 49.9 39.1 50.7C36.5 56.5 36.1 56.9 30.8 59.7C29.8 60.2 28.6 60.8 28.3 61.0C27.9 61.2 25.9 62.3 23.7 63.4C21.6 64.6 19.7 65.6 19.5 65.8C19.3 65.9 17.8 66.7 16.1 67.6C14.5 68.5 12.4 69.5 11.6 70.0C7.6 72.2 5.1 73.5 4.8 73.8C3.7 74.4 1.9 75.0 1.0 75.0L0.0 75.0L0.0 73.8C0.0 73.1 0.1 72.5 0.2 72.5C0.4 72.5 0.7 72.1 0.9 71.7C1.1 71.2 1.9 70.0 2.6 68.9C3.8 67.1 4.4 66.1 6.4 62.9C6.7 62.4 7.3 61.6 7.6 61.1C7.9 60.5 8.8 59.2 9.5 58.0C10.3 56.8 11.0 55.7 11.1 55.5C11.9 54.2 12.9 52.8 13.4 52.0C13.7 51.5 14.0 51.0 14.0 50.8C14.0 50.7 14.2 50.4 14.4 50.2C14.6 50.1 15.2 49.2 15.6 48.4C16.1 47.6 17.0 46.2 17.5 45.4C18.1 44.5 18.7 43.5 18.9 43.1C19.1 42.7 19.5 42.1 19.7 41.8C20.0 41.4 20.6 40.5 21.1 39.7C22.3 37.8 23.7 35.6 24.4 34.5C24.7 34.0 26.1 31.8 27.5 29.5C28.9 27.2 30.3 25.0 30.6 24.6C30.9 24.1 31.6 23.1 32.1 22.2C32.6 21.3 33.4 20.1 33.9 19.4C35.5 16.7 36.2 15.7 37.1 14.1C37.7 13.2 38.8 11.4 39.6 10.1C41.3 7.5 42.7 5.3 44.0 3.2C44.5 2.3 45.1 1.4 45.4 1.1C45.7 0.8 46.0 0.4 46.0 0.3C46.0 -0.2 48.5 -0.1 48.9 0.4C49.8 1.6 50.8 3.1 52.5 5.9C53.0 6.7 53.5 7.7 53.8 8.0C54.3 8.8 56.4 12.1 58.9 16.2C59.4 17.1 60.5 18.8 61.3 20.0C62.1 21.2 62.9 22.5 63.1 22.9C63.3 23.3 64.0 24.4 64.6 25.3C65.2 26.2 66.3 28.1 67.1 29.4C68.0 30.7 68.8 32.1 69.1 32.5C69.3 32.8 69.7 33.5 70.0 34.0C70.3 34.5 70.7 35.2 71.0 35.6C71.3 36.0 71.7 36.8 72.0 37.2C72.3 37.7 73.0 38.8 73.5 39.6C74.0 40.5 74.7 41.5 74.9 41.9C75.1 42.3 75.7 43.2 76.1 43.9C76.6 44.6 77.8 46.5 78.9 48.2C79.9 50.0 81.1 51.8 81.4 52.2C82.7 54.3 84.7 57.5 86.1 59.8C87.0 61.2 87.5 62.1 89.4 65.0C89.7 65.5 90.3 66.5 90.8 67.2C91.3 68.0 92.0 69.1 92.4 69.8C95.6 74.8 96.0 75.5 96.0 76.5C96.0 77.2 95.8 77.7 95.4 78.2L94.8 78.9L86.2 78.9C81.5 78.9 77.3 78.9 76.9 78.7Z";
+const PALABRA = "M16.5 62.7C6.1 60.4 2.5 47.8 10.0 40.4C18.4 32.1 32.4 38.0 32.3 49.7C32.3 58.2 24.7 64.4 16.5 62.7ZM21.8 60.4C30.0 58.5 33.0 48.1 27.0 42.0C21.5 36.5 12.4 38.1 9.2 45.3C5.4 53.5 13.0 62.5 21.8 60.4ZM40.0 59.1C35.3 58.1 33.5 55.4 33.5 49.3C33.5 42.2 36.0 39.2 42.0 39.3C46.9 39.3 49.5 41.6 49.6 46.0L49.6 46.7L48.0 46.7L46.4 46.7L46.4 46.1C46.4 43.5 44.7 41.9 42.2 41.9C38.4 41.8 36.7 44.0 36.7 49.2C36.8 54.3 38.2 56.3 41.8 56.4C44.6 56.6 46.0 55.5 46.4 52.9L46.6 51.7L48.1 51.7L49.6 51.7L49.6 52.3C49.5 57.0 45.1 60.2 40.0 59.1ZM54.9 59.0C52.0 58.2 50.6 56.0 51.0 53.0C51.6 49.4 54.5 47.9 61.0 47.5C63.9 47.4 63.8 47.5 63.7 45.6C63.5 42.6 62.5 41.8 59.3 41.8C56.5 41.8 55.0 42.8 55.0 44.7L55.0 45.3L53.4 45.3L51.8 45.3L51.9 44.1C52.2 41.0 54.4 39.5 58.7 39.2C62.7 39.0 65.5 40.2 66.5 42.7C66.8 43.5 66.8 43.8 66.9 49.7C66.9 56.9 66.9 56.5 68.4 56.5C69.4 56.5 69.5 56.6 69.5 57.7C69.5 58.6 69.2 58.8 68.2 59.0C66.1 59.5 64.6 58.9 64.2 57.3C63.9 56.2 63.8 56.2 62.9 57.1C60.9 58.9 57.6 59.7 54.9 59.0ZM1.4 45.6L1.4 32.4L3.0 32.4L4.7 32.4L4.7 45.6L4.7 58.7L3.0 58.7L1.4 58.7L1.4 45.6ZM70.8 45.6L70.8 32.4L72.4 32.4C73.9 32.4 74.0 32.4 74.1 32.8C74.1 33.0 74.1 38.9 74.1 45.9L74.1 58.6L72.4 58.7L70.8 58.7L70.8 45.6ZM60.0 56.1C62.1 55.4 63.5 53.7 63.6 51.3C63.8 49.6 63.9 49.7 61.0 49.9C56.1 50.3 54.4 51.3 54.4 53.7C54.4 56.1 56.8 57.2 60.0 56.1ZM22.0 20.3L22.0 7.2L24.4 7.2L26.8 7.2L26.9 8.0C27.0 8.4 27.1 9.0 27.2 9.3C27.3 10.1 27.4 10.1 28.1 9.2C30.4 6.2 36.2 6.1 38.9 9.0C42.3 12.6 42.1 22.0 38.6 25.1C36.0 27.5 31.3 27.6 28.8 25.3L27.9 24.5L27.9 28.9L27.8 33.3L24.9 33.3L22.0 33.4L22.0 20.3ZM4.2 26.7C1.2 26.1 0.1 24.4 0.2 21.1C0.4 16.8 4.0 14.8 11.9 14.8L12.9 14.8L12.8 13.7C12.6 11.8 11.8 11.1 9.8 11.1C8.0 11.1 6.7 11.8 6.7 12.8L6.7 13.2L3.7 13.2L0.8 13.2L0.8 12.2C1.1 8.7 4.1 7.0 9.8 7.0C14.6 7.0 16.9 7.9 18.3 10.5L18.7 11.3L18.8 16.5C18.9 22.7 18.8 22.6 20.6 22.6L21.3 22.6L21.3 24.4C21.3 26.4 21.4 26.4 20.0 26.7C17.4 27.4 14.4 26.6 13.7 25.1C13.4 24.4 13.3 24.4 12.4 25.1C10.3 26.7 7.2 27.4 4.2 26.7ZM62.7 26.8C58.6 26.1 56.2 24.1 55.3 20.3C54.9 18.8 54.9 15.1 55.2 13.7C55.6 12.2 55.7 12.3 54.0 12.4C49.6 12.7 49.1 13.6 49.1 21.8L49.1 26.5L46.1 26.5L43.2 26.5L43.2 16.9L43.2 7.3L45.6 7.3C48.3 7.2 48.1 7.1 48.3 8.8C48.5 10.3 48.7 10.5 49.1 9.6C50.2 7.5 52.6 6.4 54.9 7.0L55.4 7.2L55.5 9.7L55.6 12.3L56.1 11.4C57.5 8.4 60.4 7.0 65.1 7.0C71.6 7.0 74.6 10.0 74.7 16.2L74.7 18.1L67.8 18.1L61.0 18.1L61.0 18.7C61.0 23.2 68.1 24.6 68.8 20.2L68.9 19.7L71.9 19.6L74.8 19.6L74.8 20.1C74.8 24.8 69.2 27.9 62.7 26.8ZM102.4 26.7C98.6 25.7 96.8 22.5 96.9 16.8C96.9 13.0 97.5 10.9 99.2 9.0C101.6 6.4 106.7 6.1 109.3 8.4C109.7 8.8 110.1 9.1 110.1 9.1C110.2 9.1 110.2 7.1 110.2 4.7L110.2 0.2L113.2 0.2L116.2 0.2L116.2 13.3L116.2 26.5L113.8 26.5C111.1 26.5 111.3 26.6 111.1 25.2C111.0 23.9 110.8 23.7 110.4 24.3C108.7 26.6 105.6 27.5 102.4 26.7ZM126.3 26.9C120.4 25.7 118.2 23.1 118.2 16.9C118.2 10.0 121.3 7.0 128.3 7.0C134.8 7.0 137.8 10.0 137.8 16.4L137.8 18.1L131.0 18.1L124.2 18.1L124.2 18.7C124.2 23.3 131.1 24.6 132.0 20.3L132.2 19.7L135.0 19.6L137.9 19.6L137.8 20.7C137.6 23.5 135.6 25.6 132.1 26.6C131.2 26.8 127.2 27.0 126.3 26.9ZM76.6 16.9L76.6 7.3L79.0 7.3L81.4 7.2L81.5 7.6C81.6 7.8 81.7 8.4 81.8 9.0C81.9 10.2 82.0 10.2 83.0 9.1C85.6 6.4 91.1 6.1 93.2 8.4C95.0 10.4 95.0 10.6 95.1 19.2L95.2 26.5L92.1 26.5L89.1 26.5L89.0 20.0C89.0 13.8 89.0 13.5 88.6 12.9C87.6 10.9 84.3 11.2 83.1 13.5L82.6 14.4L82.5 20.4L82.5 26.5L79.5 26.5L76.5 26.5L76.6 16.9ZM10.9 22.3C12.1 21.7 12.8 20.4 12.8 18.7L12.8 18.1L11.1 18.2C7.3 18.4 5.3 19.9 6.4 21.8C7.1 22.8 9.3 23.1 10.9 22.3ZM33.6 21.8C35.5 20.7 36.0 14.6 34.3 12.6C33.3 11.4 30.8 11.2 29.3 12.3C28.0 13.3 27.4 16.9 28.2 19.7C28.8 21.9 31.5 22.9 33.6 21.8ZM108.3 21.9C110.6 20.7 111.1 15.0 109.2 12.7C108.1 11.4 105.5 11.2 104.2 12.3C102.3 13.8 102.4 20.3 104.3 21.6C105.2 22.3 107.3 22.5 108.3 21.9ZM68.5 14.2C68.1 9.9 62.0 9.9 61.1 14.2L60.9 14.8L64.8 14.7L68.6 14.7L68.5 14.2ZM131.7 14.0C131.3 9.7 124.2 10.3 124.2 14.6C124.2 14.7 125.9 14.8 128.0 14.8L131.8 14.8L131.7 14.0Z";
+const PUNTO_O = { cx: 19.1, cy: 49.66, r: 4.84 };
+const COLOR_LOGO = C.papel;
+/* Variantes oficiales del componente: horizontal 257×80 y apilado 138×139. */
+const VARIANTES = {
+  horizontal: { w: 257, h: 80, monte: 'translate(0 0)', palabra: 'translate(119 17.25)', monteM: [1, 0, 0], palabraM: [1, 119, 17.25] },
+  apilado: { w: 138, h: 139, monte: 'translate(29.4 0) scale(0.825)', palabra: 'translate(0 76)', monteM: [0.825, 29.4, 0], palabraM: [1, 0, 76] },
+};
+
+/* ---------- Elementos culturales ----------
+   REQUIERE CONSULTA PREVIA A LA COMUNIDAD: los dos interruptores de abajo.
+   Quedan apagados por defecto y no se encienden sin ese proceso. */
+const CONSULTA = {
+  nombresMapuzugun: false, // REQUIERE CONSULTA PREVIA A LA COMUNIDAD
+  fotoEstudiantes: false,  // REQUIERE CONSULTA PREVIA A LA COMUNIDAD (y consentimiento informado)
+};
+
+/* ---------- Guion: tiempos en segundos ---------- */
+const DUR = 25;
+const T = {
+  s1Linea: [0.5, 2.7],
+  s2Anillos: { t0: 3.0, paso: 0.055, dur: 0.85 },
+  s2Alza: { t0: 4.5, dur: 1.8, paso: 0.03 },
+  velo: [3.0, 6.6],
+  s2Niebla: { t0: 4.9, paso: 0.35, dur: 1.6 },
+  s2Rotulo: [5.5, 6.1, 6.8, 7.15],
+  s3Cambio: [6.9, 7.8],
+  s3Arbol: [7.2, 8.3],
+  s3Cinta: [8.0, 9.15],
+  s3Compas: [9.1, 9.45],
+  s3Nota: [9.3, 9.8],
+  s3Titular: [9.45, 10.05, 10.95, 11.35],
+  s3Salida: [10.85, 11.35],
+  s4Reticula: [11.2, 11.8, 18.95, 19.4],
+  s4Fichas: { t0: 11.3, paso: 0.3, dur: 0.8 },
+  s4Dibujo: { t0: 11.9, paso: 0.3, dur: 1.3 },
+  s4Corona: [13.2, 13.6],
+  s5Compacta: [15.0, 15.7],
+  s5Lineas: { t0: 15.5, paso: 0.12, dur: 0.7 },
+  s5Nodo: [15.95, 16.35],
+  s5Punto: [16.25, 16.55],
+  s5Enlace: [16.3, 16.65],
+  s5Ficha: [16.5, 17.0],
+  s5Textos: { t0: 16.75, paso: 0.12, dur: 0.5 },
+  s5Salida: [18.9, 19.3],
+  s6Entrada: [19.1, 19.6],
+  s6Morph: { t0: 19.7, dur: 1.4, paso: 0.025 },
+  s6Rotulo: [19.2, 19.6, 21.6, 21.95],
+  s6Titular: [19.5, 20.1, 21.6, 22.0],
+  s7Anida: { t0: 21.75, dur: 0.75, paso: 0.035 },
+  s7Monte: [22.7, 23.1],
+  s7Palabra: { t0: 22.95, paso: 0.1, dur: 0.5 },
+  s7Punto: [23.55, 24.1],
+};
+const PLANOS = [
+  [0, 'Plano 1 · Curva de nivel'], [3, 'Plano 2 · Volcán Villarrica'], [7, 'Plano 3 · Araucaria'],
+  [11, 'Plano 4 · Fichas de campo'], [15, 'Plano 5 · Proyecto situado'], [19, 'Plano 6 · Otro territorio'], [22, 'Plano 7 · Logo'],
+];
+
+/* ---------- Composición por formato ---------- */
+const LAYOUTS = {
+  '16x9': {
+    W: 1920, H: 1080, trazo: 3,
+    plano: { cx: 960, cy: 540, s: 410 },
+    volcan: { cx: 960, by: 840, sx: 640, h: 470, q: 0.13 },
+    rotulo2: { dx: 70, dy: -64, anchor: 'start' },
+    retrae: { x: 1180, y: 868, s: 0.68 },
+    s3: {
+      suelo: 880, bosque: 800, arbol: { x: 1440, h: 800 },
+      titular: { x: 120, y: 400, size: 150, lineas: ['El lugar es el', 'aula.'] },
+      nota: { x: 1312, y: 958, anchor: 'end' },
+    },
+    niebla: [{ dy: -100, c: C.azulMedio, a: 0.85, desde: -1 }, { dy: -36, c: C.azulMedio, a: 0.6, desde: 1 }, { dy: -170, c: C.papel, a: 0.10, desde: -1 }],
+    fichas: { w: 500, pos: [[400, 190, -3], [960, 160, 2], [1520, 195, -1.5]] },
+    chips: { s: 0.52, pos: [[250, 250, -2], [250, 540, 1.5], [250, 830, -1]], lado: 'derecha' },
+    nodo: { x: 690, y: 540, r: 34 },
+    proyecto: { x: 860, y: 190, w: 920, pad: 64, titulo: 120 },
+    foto: { x: 880, y: 895, w: 900, h: 160, rot: 0 },
+    volcan6: { cx: 1400, by: 800, sx: 420, h: 330, q: 0.13 },
+    morro: { cx: 1380, by: 800, rw: 250, h: 470, q: 0.14, lean: 0.34, marCx: 1420, marHw: 660, marY: 838, marGap: 30 },
+    rotulo6: { dx: -60, dy: -60, anchor: 'end' },
+    titular6: { x: 120, y: 360, size: 104, lineas: ['Cada escuela', 'tiene su propio', 'laboratorio', 'afuera.'] },
+    logo: { variante: 'horizontal', cx: 960, cy: 540, ancho: 900 },
+  },
+  '9x16': {
+    W: 1080, H: 1920, trazo: 3,
+    plano: { cx: 540, cy: 930, s: 430 },
+    volcan: { cx: 540, by: 1190, sx: 480, h: 440, q: 0.13 },
+    rotulo2: { dx: 60, dy: -70, anchor: 'start' },
+    retrae: { x: 380, y: 1075, s: 0.62 },
+    s3: {
+      suelo: 1100, bosque: 1020, arbol: { x: 700, h: 920 },
+      titular: { x: 90, y: 1410, size: 116, lineas: ['El lugar es el', 'aula.'] },
+      nota: { x: 90, y: 1188, anchor: 'start' },
+    },
+    niebla: [{ dy: -100, c: C.azulMedio, a: 0.85, desde: -1 }, { dy: -36, c: C.azulMedio, a: 0.6, desde: 1 }, { dy: -180, c: C.papel, a: 0.10, desde: -1 }],
+    fichas: { w: 480, pos: [[300, 200, -3], [780, 280, 2.2], [530, 890, -1.5]] },
+    chips: { s: 0.5, pos: [[200, 320, -2], [540, 320, 1.5], [880, 320, -1]], lado: 'abajo' },
+    nodo: { x: 540, y: 630, r: 34 },
+    proyecto: { x: 90, y: 760, w: 900, pad: 60, titulo: 116 },
+    foto: { x: 90, y: 1470, w: 900, h: 200, rot: 0 },
+    volcan6: { cx: 560, by: 980, sx: 380, h: 320, q: 0.13 },
+    morro: { cx: 540, by: 980, rw: 230, h: 480, q: 0.14, lean: 0.34, marCx: 540, marHw: 720, marY: 1018, marGap: 30 },
+    rotulo6: { dx: -50, dy: -60, anchor: 'end' },
+    titular6: { x: 90, y: 1250, size: 100, lineas: ['Cada escuela', 'tiene su propio', 'laboratorio', 'afuera.'] },
+    logo: { variante: 'apilado', cx: 540, cy: 930, ancho: 620 },
+  },
+};
+
+/* ==========================================================================
+   Utilidades
+   ========================================================================== */
+const NS = 'http://www.w3.org/2000/svg';
+const $ = (s) => document.querySelector(s);
+function mk(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function set(e, attrs) { for (const k in attrs) e.setAttribute(k, attrs[k]); }
+const clamp = (v, a = 0, b = 1) => (v < a ? a : v > b ? b : v);
+const lerp = (a, b, t) => a + (b - a) * t;
+const lin = (t, a, b) => clamp((t - a) / (b - a));
+const f1 = (v) => Math.round(v * 10) / 10;
+
+/* Easing de marca: cubic-bezier(0.22, 1, 0.36, 1), salida suave, sin rebote. */
+function cubicBezier(x1, y1, x2, y2) {
+  const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+  const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+  const sx = (t) => ((ax * t + bx) * t + cx) * t;
+  const sy = (t) => ((ay * t + by) * t + cy) * t;
+  return (x) => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    let lo = 0, hi = 1, t = x;
+    for (let i = 0; i < 40; i++) { const v = sx(t); if (Math.abs(v - x) < 1e-6) break; if (v < x) lo = t; else hi = t; t = (lo + hi) / 2; }
+    return sy(t);
+  };
+}
+const EASE = cubicBezier(0.22, 1, 0.36, 1);
+const ez = (t, a, b) => EASE(lin(t, a, b));
+/* Entra en [a,b] y sale en [c,d]. */
+const ventana = (t, a, b, c, d) => Math.min(ez(t, a, b), 1 - ez(t, c, d));
+
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+function mezcla(a, b, t) {
+  const A = hex2rgb(a), B = hex2rgb(b);
+  return 'rgb(' + A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(',') + ')';
+}
+/* Catmull-Rom a Bézier: curvas suaves que pasan por los puntos. */
+function curva(p, cerrada) {
+  const n = p.length;
+  const g = (i) => (cerrada ? p[(i + n) % n] : p[Math.max(0, Math.min(n - 1, i))]);
+  let d = 'M' + f1(p[0][0]) + ',' + f1(p[0][1]);
+  const fin = cerrada ? n : n - 1;
+  for (let i = 0; i < fin; i++) {
+    const p0 = g(i - 1), p1 = g(i), p2 = g(i + 1), p3 = g(i + 2);
+    d += 'C' + f1(p1[0] + (p2[0] - p0[0]) / 6) + ',' + f1(p1[1] + (p2[1] - p0[1]) / 6) + ' ' +
+      f1(p2[0] - (p3[0] - p1[0]) / 6) + ',' + f1(p2[1] - (p3[1] - p1[1]) / 6) + ' ' + f1(p2[0]) + ',' + f1(p2[1]);
+  }
+  return cerrada ? d + 'Z' : d;
+}
+function poligono(p) { return 'M' + p.map((q) => f1(q[0]) + ',' + f1(q[1])).join('L') + 'Z'; }
+function muestreaCurva(p, porTramo) {
+  const out = [];
+  const n = p.length, g = (i) => p[Math.max(0, Math.min(n - 1, i))];
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = g(i - 1), p1 = g(i), p2 = g(i + 1), p3 = g(i + 2);
+    for (let k = 0; k < porTramo; k++) {
+      const t = k / porTramo, t2 = t * t, t3 = t2 * t;
+      out.push([0, 1].map((j) => 0.5 * ((2 * p1[j]) + (-p0[j] + p2[j]) * t + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * t2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * t3)));
+    }
+  }
+  out.push(p[n - 1]);
+  return out;
+}
+function yEnX(muestras, x) {
+  for (let i = 0; i < muestras.length - 1; i++) {
+    const a = muestras[i], b = muestras[i + 1];
+    if ((a[0] - x) * (b[0] - x) <= 0 && a[0] !== b[0]) return lerp(a[1], b[1], (x - a[0]) / (b[0] - a[0]));
+  }
+  return muestras[muestras.length - 1][1];
+}
+
+/* Texto con marcado mínimo: *así* va en itálica (nombres científicos y
+   magnitudes físicas); lo demás en redonda. */
+const FAM = {
+  archivo: { 'font-family': "'Archivo', sans-serif", 'font-weight': 800, 'letter-spacing': '-0.045em' },
+  news: { 'font-family': "'Newsreader', serif", 'font-weight': 500 },
+};
+function texto(parent, str, o) {
+  const t = mk('text', { x: o.x, y: o.y, 'font-size': o.size, fill: o.fill, 'text-anchor': o.anchor || 'start' }, parent);
+  set(t, FAM[o.fam || 'news']);
+  if (o.ls) t.setAttribute('letter-spacing', o.ls);
+  for (const parte of str.split(/(\*[^*]+\*)/).filter(Boolean)) {
+    const ts = mk('tspan', null, t);
+    if (parte[0] === '*') { ts.setAttribute('font-style', 'italic'); ts.textContent = parte.slice(1, -1); } else ts.textContent = parte;
+  }
+  return t;
+}
+function ancho(t) { try { return t.getComputedTextLength(); } catch (e) { return 0; } }
+function largo(p) { try { return p.getTotalLength(); } catch (e) { return 1000; } }
+function dibujaTrazo(p, L, prog) {
+  if (prog >= 1) { p.setAttribute('stroke-dasharray', 'none'); p.setAttribute('stroke-dashoffset', 0); }
+  else { p.setAttribute('stroke-dasharray', L + ' ' + L); p.setAttribute('stroke-dashoffset', L * (1 - prog)); }
+}
+
+/* ==========================================================================
+   Estado
+   ========================================================================== */
+const Q = new URLSearchParams(location.search);
+let FORMATO = Q.get('formato') === '9x16' ? '9x16' : '16x9';
+const LIMPIO = Q.has('limpio');
+let L;          // layout activo
+let S = {};     // referencias a nodos de la escena
+let tActual = 0, reproduciendo = true, listo = false;
+
+/* ==========================================================================
+   Curvas de nivel: el material que atraviesa toda la pieza
+   ========================================================================== */
+const N = 16;   // curvas
+const M = 180;  // puntos por curva
+const TH = Array.from({ length: M }, (_, j) => Math.PI - (2 * Math.PI * j) / M);
+const RC = 0.075; // radio del cráter respecto de la base
+let RHO; // radios con ruido, fijos
+
+function preparaRelieve() {
+  const rnd = mulberry32(7);
+  const armonicos = [1, 2, 3, 5, 8].map((f, i) => ({ f, a: [0.045, 0.04, 0.028, 0.016, 0.008][i], p: rnd() * 6.283, b: rnd() * 2 }));
+  // Quebradas: muescas en V que apuntan a la cumbre, como el drenaje radial de un estratovolcán.
+  const quebradas = Array.from({ length: 9 }, () => ({ th: rnd() * 6.283, w: 0.07 + rnd() * 0.07, d: 0.05 + rnd() * 0.06 }));
+  RHO = [];
+  for (let k = 0; k < N; k++) {
+    const z = k / (N - 1);
+    const r = RC + (1 - RC) * Math.pow(1 - z, 1.5);
+    const fila = [];
+    for (let j = 0; j < M; j++) {
+      const th = TH[j];
+      let n = 0;
+      for (const h of armonicos) n += h.a * Math.sin(h.f * th + h.p + h.b * z);
+      let g = 0;
+      for (const q of quebradas) {
+        let d = Math.abs(((th - q.th + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+        if (d < q.w) g -= q.d * Math.pow(1 - d / q.w, 1.6) * Math.pow(1 - z, 0.6);
+      }
+      fila.push(r * (1 + n * (0.55 + 0.45 * (1 - z)) + g));
+    }
+    RHO.push(fila);
+  }
+}
+function ptsPlano(k) { const P = L.plano; return RHO[k].map((r, j) => [P.cx + r * Math.cos(TH[j]) * P.s, P.cy + r * Math.sin(TH[j]) * P.s]); }
+function ptsVolcan(k, V) {
+  const z = k / (N - 1);
+  return RHO[k].map((r, j) => [V.cx + r * Math.cos(TH[j]) * V.sx, V.by - z * V.h + r * Math.sin(TH[j]) * V.sx * V.q]);
+}
+function ptsMorro(k) {
+  const G = L.morro;
+  if (k < 3) {
+    // Tres líneas de agua: la bahía. Anillos muy aplastados que se leen como una sola línea.
+    return TH.map((th) => {
+      const x = G.marCx + Math.cos(th) * G.marHw;
+      return [x, G.marY + k * G.marGap + Math.sin(th) * 1.2 + Math.sin(x / 58 + k * 1.7) * 4];
+    });
+  }
+  const zz = ((k - 3) / (N - 4)) * 0.97;
+  // Domo de granito: laderas casi verticales, cima redonda, falda más ancha.
+  const r = Math.sqrt(Math.max(0, 1 - Math.pow(zz, 2.6))) * (1 + 0.32 * Math.pow(1 - zz, 4));
+  const cx = G.cx + G.lean * Math.pow(zz, 1.3) * G.rw;
+  return TH.map((th) => {
+    const rho = r * (1 + 0.045 * Math.sin(2 * th + k * 0.35) + 0.02 * Math.sin(5 * th + 1.3 + k * 0.2) + 0.1 * Math.max(0, Math.cos(th - 0.2)) * (1 - zz));
+    return [cx + rho * Math.cos(th) * G.rw, G.by - zz * G.h + rho * Math.sin(th) * G.rw * G.q];
+  });
+}
+function lerpPts(A, B, u) { if (u <= 0) return A; if (u >= 1) return B; return A.map((a, i) => [lerp(a[0], B[i][0], u), lerp(a[1], B[i][1], u)]); }
+
+/* Contornos del logo como destino de las curvas: se muestrean de las curvas
+   oficiales y se orientan igual que los anillos (desde la izquierda, por abajo). */
+function contornoLogo(d, matriz) {
+  const p = mk('path', { d, fill: 'none' }, S.medidor);
+  const Lt = p.getTotalLength();
+  let pts = [];
+  for (let i = 0; i < M; i++) { const q = p.getPointAtLength((Lt * i) / M); pts.push([matriz[1] + q.x * matriz[0], matriz[2] + q.y * matriz[0]]); }
+  p.remove();
+  let area = 0;
+  for (let i = 0; i < M; i++) { const a = pts[i], b = pts[(i + 1) % M]; area += a[0] * b[1] - b[0] * a[1]; }
+  if (area > 0) pts.reverse();
+  let iMin = 0;
+  for (let i = 1; i < M; i++) if (pts[i][0] < pts[iMin][0] - 0.01 || (Math.abs(pts[i][0] - pts[iMin][0]) <= 0.01 && pts[i][1] > pts[iMin][1])) iMin = i;
+  pts = pts.slice(iMin).concat(pts.slice(0, iMin));
+  const c = pts.reduce((s, q) => [s[0] + q[0] / M, s[1] + q[1] / M], [0, 0]);
+  return { pts, c };
+}
+
+/* ==========================================================================
+   Construcción
+   ========================================================================== */
+function construir() {
+  L = LAYOUTS[FORMATO];
+  const svg = $('#stage');
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${L.W} ${L.H}`);
+  S = {};
+  S.defs = mk('defs', null, svg);
+  S.medidor = mk('g', { opacity: 0 }, svg);
+
+  // Fondo
+  S.fondo = mk('rect', { x: 0, y: 0, width: L.W, height: L.H, fill: C.azul }, svg);
+
+  // Cielo del plano 3: luz baja y húmeda cerca del horizonte
+  S.cielo = mk('g', { opacity: 0 }, svg);
+  mk('rect', { x: 0, y: 0, width: L.W, height: L.H, fill: C.azulMedio }, S.cielo);
+  const rg = mk('radialGradient', { id: 'resplandor', cx: 0.5, cy: 0.5, r: 0.5 }, S.defs);
+  mk('stop', { offset: 0, 'stop-color': C.papel, 'stop-opacity': 0.30 }, rg);
+  mk('stop', { offset: 0.5, 'stop-color': C.papel, 'stop-opacity': 0.12 }, rg);
+  mk('stop', { offset: 1, 'stop-color': C.papel, 'stop-opacity': 0 }, rg);
+  const a3 = L.s3.arbol;
+  mk('ellipse', { cx: a3.x - L.W * 0.1, cy: L.s3.bosque + 40, rx: L.W * 0.62, ry: L.H * (FORMATO === '16x9' ? 0.46 : 0.26), fill: 'url(#resplandor)' }, S.cielo);
+
+  // Retícula del cuaderno de campo (planos 4 y 5)
+  S.reticula = mk('path', { d: reticula(60), stroke: C.azulMedio, 'stroke-width': 1.5, fill: 'none', opacity: 0 }, svg);
+
+  // Silueta lejana del volcán (plano 3)
+  S.lejos = mk('g', { opacity: 0 }, svg);
+  preparaRelieve();
+  construirSilueta();
+
+  // Curvas de nivel
+  S.curvasG = mk('g', { 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg);
+  S.curvas = [];
+  const planos = [], volcanes = [], volcanes6 = [], morros = [];
+  for (let k = 0; k < N; k++) {
+    planos.push(ptsPlano(k)); volcanes.push(ptsVolcan(k, L.volcan)); volcanes6.push(ptsVolcan(k, L.volcan6)); morros.push(ptsMorro(k));
+    const p = mk('path', { d: curva(planos[k], true), fill: C.azul, stroke: C.papel, 'stroke-width': L.trazo }, S.curvasG);
+    S.curvas.push({ p, L: largo(p) });
+  }
+  S.geo = { planos, volcanes, volcanes6, morros };
+
+  // Niebla en capas de azul
+  S.nieblas = L.niebla.map((n, i) => {
+    const id = 'niebla' + i;
+    const lg = mk('linearGradient', { id, x1: 0, y1: 0, x2: 0, y2: 1 }, S.defs);
+    mk('stop', { offset: 0, 'stop-color': n.c, 'stop-opacity': 0 }, lg);
+    mk('stop', { offset: 0.32, 'stop-color': n.c, 'stop-opacity': n.a }, lg);
+    mk('stop', { offset: 1, 'stop-color': n.c, 'stop-opacity': n.a * 0.8 }, lg);
+    const y0 = L.volcan.by + n.dy;
+    const pts = [];
+    for (let x = -L.W * 0.9; x <= L.W * 1.9; x += 24) pts.push([x, y0 + 16 * Math.sin(x / 170 + i * 2) + 9 * Math.sin(x / 61 + i)]);
+    const d = curva(pts, false) + `L${L.W * 1.9},${L.H + 60}L${-L.W * 0.9},${L.H + 60}Z`;
+    return { p: mk('path', { d, fill: `url(#${id})`, opacity: 0 }, svg), n };
+  });
+
+  // Paisaje cercano del plano 3: bosque, suelo, araucaria, medición
+  S.paisaje = mk('g', { opacity: 0 }, svg);
+  construirBosque();
+  S.suelo = mk('path', { d: suelo(), fill: NOCHE }, S.paisaje);
+  S.arbol = araucaria(S.paisaje, { x: a3.x, suelo: L.s3.suelo, h: a3.h }, NOCHE);
+  construirMedicion();
+
+  // Lluvia fina
+  S.lluvia = mk('g', { stroke: C.papel, 'stroke-width': 2, 'stroke-linecap': 'round', opacity: 0 }, svg);
+  const rl = mulberry32(21);
+  S.gotas = Array.from({ length: 70 }, () => ({ x: rl() * L.W * 1.1 - L.W * 0.1, y: rl() * L.H, v: 1100 + rl() * 500, l: 26 + rl() * 22, p: mk('line', null, S.lluvia) }));
+
+  // Nota de campo, titulares y rótulos
+  S.nota = construirNota();
+  S.titular3 = bloqueTitular(svg, L.s3.titular);
+  construirFichas(svg);
+  construirEnlaces(svg);
+  construirProyecto(svg);
+  construirFoto(svg);
+  S.titular6 = bloqueTitular(svg, L.titular6);
+  construirRotulo(svg);
+  construirLogo(svg);
+
+  // Destinos del logo para las curvas
+  const V = VARIANTES[L.logo.variante];
+  const esc = L.logo.ancho / V.w;
+  const x0 = L.logo.cx - (V.w * esc) / 2, y0 = L.logo.cy - (V.h * esc) / 2;
+  const mm = V.monteM;
+  const subs = MONTE.match(/M[^M]+/g);
+  const matMonte = [esc * mm[0], x0 + mm[1] * esc, y0 + mm[2] * esc];
+  S.destMonte = contornoLogo(subs[1], matMonte);
+  S.destCirculo = contornoLogo(subs[0], matMonte);
+}
+
+function reticula(paso) {
+  let d = '';
+  for (let x = paso; x < L.W; x += paso) d += `M${x},0V${L.H}`;
+  for (let y = paso; y < L.H; y += paso) d += `M0,${y}H${L.W}`;
+  return d;
+}
+
+function construirSilueta() {
+  // Borde exterior de la pila de curvas del plano 2, suavizado, más la nieve
+  // de la cumbre (el Villarrica tiene casquete glaciar).
+  const V = L.volcan;
+  const izq = [], der = [];
+  for (let k = 0; k < N; k++) {
+    const P = ptsVolcan(k, V);
+    let a = P[0], b = P[0];
+    for (const q of P) { if (q[0] < a[0]) a = q; if (q[0] > b[0]) b = q; }
+    izq.push(a); der.push(b);
+  }
+  const tope = ptsVolcan(N - 1, V).filter((q, j) => Math.sin(TH[j]) < 0).sort((p, q) => p[0] - q[0]);
+  const base = V.by + 260;
+  const contorno = [[izq[0][0], base], ...izq, ...tope, ...der.slice().reverse(), [der[0][0], base]];
+  mk('path', { d: curva(contorno, true), fill: C.azul, opacity: 0.62 }, S.lejos);
+  const s = 9; // curva donde empieza la nieve
+  const frente = ptsVolcan(s, V).filter((q, j) => Math.sin(TH[j]) >= 0).sort((p, q) => q[0] - p[0]);
+  const nieve = [...izq.slice(s), ...tope, ...der.slice(s).reverse(), ...frente];
+  mk('path', { d: poligono(nieve), fill: C.papel, opacity: 0.26 }, S.lejos);
+}
+
+function construirBosque() {
+  // Bosque templado en silueta: copas redondeadas y algunos coigües emergentes
+  // con la copa en pisos. Tono intermedio entre la niebla y la araucaria.
+  const rnd = mulberry32(31);
+  const base = L.s3.suelo, tope = L.s3.bosque;
+  const formas = [];
+  for (let x = -60; x < L.W + 60;) {
+    const r = 22 + rnd() * 34;
+    formas.push({ cx: x, cy: tope + (base - tope) * (0.15 + rnd() * 0.45) + r * 0.3, rx: r * 1.15, ry: r });
+    x += r * (1.0 + rnd() * 0.6);
+  }
+  for (let e = 0; e < 4; e++) {
+    const cx = L.W * (0.06 + 0.25 * e + rnd() * 0.1), alto = 40 + rnd() * 40;
+    for (let c = 0; c < 5; c++) formas.push({ cx: cx + (rnd() - 0.5) * 90, cy: tope - alto + rnd() * 50, rx: 36 + rnd() * 26, ry: 18 + rnd() * 10 });
+  }
+  const pts = [];
+  for (let x = -20; x <= L.W + 20; x += 6) {
+    let y = base + 20;
+    for (const f of formas) {
+      const u = Math.abs((x - f.cx) / f.rx);
+      if (u < 1) y = Math.min(y, f.cy - f.ry * Math.sqrt(1 - u * u));
+      else if (u < 2.5) y = Math.min(y, f.cy + (u - 1) * f.ry * 1.6);
+    }
+    pts.push([x, y]);
+  }
+  S.bosque = mk('path', { d: poligono([...pts, [L.W + 20, L.H + 20], [-20, L.H + 20]]), fill: C.azul }, S.paisaje);
+  // Una capa de niebla clara delante del bosque y detrás de la araucaria
+  const lg = mk('linearGradient', { id: 'nieblaBosque', x1: 0, y1: 0, x2: 0, y2: 1 }, S.defs);
+  mk('stop', { offset: 0, 'stop-color': C.papel, 'stop-opacity': 0 }, lg);
+  mk('stop', { offset: 0.5, 'stop-color': C.papel, 'stop-opacity': 0.13 }, lg);
+  mk('stop', { offset: 1, 'stop-color': C.papel, 'stop-opacity': 0.05 }, lg);
+  S.nieblaBosque = mk('rect', { x: -L.W * 0.3, y: tope - 30, width: L.W * 1.6, height: base - tope + 60, fill: 'url(#nieblaBosque)' }, S.paisaje);
+}
+function suelo() {
+  const pts = [];
+  for (let x = -20; x <= L.W + 20; x += 20) pts.push([x, L.s3.suelo + 5 * Math.sin(x / 260) + 3 * Math.sin(x / 90)]);
+  return curva(pts, false) + `L${L.W + 20},${L.H + 20}L-20,${L.H + 20}Z`;
+}
+
+/* Araucaria araucana adulta en contraluz: fuste limpio, copa en paraguas con
+   ramas en verticilos que suben en la punta. Se dibuja a escala: 28 m de alto,
+   1,2 m de diámetro a la altura del pecho (1,3 m). */
+function araucaria(parent, o, color) {
+  const g = mk('g', { fill: color }, parent);
+  const pxm = o.h / 28, dap = 1.2 * pxm;
+  const topeY = o.suelo - o.h * 0.975;
+  const izq = [], der = [];
+  for (let i = 0; i <= 24; i++) {
+    const s = i / 24, y = lerp(o.suelo + 8, topeY, s);
+    let w = lerp(dap * 1.04, dap * 0.4, Math.pow(s, 0.9));
+    if (s < 0.035) w *= 1 + ((0.035 - s) / 0.035) * 0.5;
+    izq.push([o.x - w / 2, y]); der.push([o.x + w / 2, y]);
+  }
+  mk('path', { d: poligono([...izq, ...der.reverse()]) }, g);
+  const rnd = mulberry32(11);
+  // [altura relativa, largo relativo]: la copa es un paraguas, casi plana arriba.
+  const verticilos = [[0.7, 0.2], [0.765, 0.28], [0.825, 0.32], [0.88, 0.335], [0.93, 0.31], [0.975, 0.24]];
+  for (const [hf, sf] of verticilos) {
+    const y = o.suelo - hf * o.h, Lr = sf * o.h, w0 = o.h * lerp(0.036, 0.027, (hf - 0.7) / 0.28);
+    rama(g, o.x, y, 1, Lr * (0.94 + rnd() * 0.12), w0, 0, rnd);
+    rama(g, o.x, y, -1, Lr * (0.94 + rnd() * 0.12), w0, 0, rnd);
+    // Ramas que apuntan hacia quien mira o se alejan: se ven más cortas.
+    rama(g, o.x, y - 5, rnd() < 0.5 ? 1 : -1, Lr * (0.38 + rnd() * 0.14), w0 * 0.9, 0.7, rnd);
+  }
+  return { g, pxm, dap };
+}
+function rama(g, x, y, dir, Lr, w0, alza, rnd) {
+  // Sale casi horizontal, cede un poco con el peso y levanta la punta.
+  const P = [[x, y], [x + dir * 0.36 * Lr, y + 0.06 * Lr - alza * 0.18 * Lr], [x + dir * 0.74 * Lr, y + 0.07 * Lr - alza * 0.36 * Lr], [x + dir * Lr, y - 0.16 * Lr - alza * 0.42 * Lr]];
+  const bz = (s, i) => { const u = 1 - s; return u * u * u * P[0][i] + 3 * u * u * s * P[1][i] + 3 * u * s * s * P[2][i] + s * s * s * P[3][i]; };
+  const bzD = (s, i) => { const u = 1 - s; return 3 * u * u * (P[1][i] - P[0][i]) + 6 * u * s * (P[2][i] - P[1][i]) + 3 * s * s * (P[3][i] - P[2][i]); };
+  const fase = rnd() * 3;
+  // Las hojas escamosas cubren toda la rama: se ve como una cuerda gruesa y grumosa.
+  const ancho = (s) => w0 * (0.55 + 0.45 * (1 - s)) * (1 + 0.3 * Math.abs(Math.sin(s * Math.PI * 4.5 + fase))) * (s < 0.08 ? 0.6 + s * 5 : 1);
+  tubo(g, (s) => [bz(s, 0), bz(s, 1)], (s) => [bzD(s, 0), bzD(s, 1)], ancho, 36);
+}
+function tubo(g, pos, der, ancho, n) {
+  const A = [], B = [];
+  for (let i = 0; i <= n; i++) {
+    const s = i / n, p = pos(s), d = der(s), l = Math.hypot(d[0], d[1]) || 1, nx = -d[1] / l, ny = d[0] / l, w = ancho(s) / 2;
+    A.push([p[0] + nx * w, p[1] + ny * w]); B.push([p[0] - nx * w, p[1] - ny * w]);
+  }
+  mk('path', { d: poligono([...A, ...B.reverse()]) }, g);
+  const pf = pos(1);
+  mk('circle', { cx: f1(pf[0]), cy: f1(pf[1]), r: f1(ancho(1) / 2) }, g);
+}
+function construirMedicion() {
+  const a = L.s3.arbol, pxm = S.arbol.pxm, dap = S.arbol.dap;
+  const yCopa = L.s3.suelo - 0.62 * a.h, yDap = L.s3.suelo - 1.3 * pxm, xCinta = a.x - dap / 2 - 26;
+  const g = mk('g', { stroke: C.naranjo, 'stroke-width': 4, 'stroke-linecap': 'round', fill: 'none' }, S.paisaje);
+  const cinta = mk('line', { x1: xCinta, y1: yCopa, x2: xCinta, y2: yCopa }, g);
+  const tope = mk('line', { x1: xCinta - 10, y1: yCopa, x2: xCinta + 10, y2: yCopa }, g);
+  const marcas = [];
+  for (let m = 2; m <= 16; m += 2) { const y = L.s3.suelo - m * pxm; marcas.push({ y, p: mk('line', { x1: xCinta - 16, y1: y, x2: xCinta, y2: y, opacity: 0 }, g) }); }
+  // La cinta dobla en 1,3 m y cruza el tronco: el diámetro a la altura del pecho.
+  const compas = mk('path', { d: `M${xCinta},${yDap}H${a.x + dap / 2}M${a.x - dap / 2},${yDap - 12}V${yDap + 12}M${a.x + dap / 2},${yDap - 12}V${yDap + 12}` }, g);
+  S.medicion = { g, cinta, tope, marcas, compas, Lc: largo(compas), xCinta, yCopa, yDap };
+}
+
+function construirNota() {
+  // Etiqueta de ejemplar: nombre científico y el dato medido.
+  const n = L.s3.nota, g = mk('g', { opacity: 0 }, $('#stage'));
+  // REQUIERE CONSULTA PREVIA A LA COMUNIDAD: nombre en mapuzugun del catálogo de la
+  // plataforma, en la misma línea y con el mismo cuerpo que el nombre científico.
+  const especie = CONSULTA.nombresMapuzugun ? '*Araucaria araucana* · pewen' : '*Araucaria araucana*';
+  const lineas = [[especie, 48, C.papel], ['Ø 1,2 m', 60, C.crema]];
+  let y = n.y, maxW = 0;
+  const textos = lineas.map(([s, size, fill], i) => {
+    if (i > 0) y += size * 1.12;
+    const t = texto(g, s, { x: n.x, y, size, fill, anchor: n.anchor });
+    maxW = Math.max(maxW, ancho(t));
+    return t;
+  });
+  const m = S.medicion;
+  const fin = n.anchor === 'end' ? [n.x + 14, n.y - 44] : [n.x + maxW + 16, n.y - 44];
+  const guia = mk('path', { d: `M${m.xCinta - 8},${m.yDap + 8}L${fin[0]},${fin[1]}`, stroke: C.papel, 'stroke-width': 2.5, fill: 'none', 'stroke-linecap': 'round' }, $('#stage'));
+  return { g, textos, guia, Lg: largo(guia) };
+}
+
+function bloqueTitular(parent, o) {
+  const g = mk('g', { opacity: 0 }, parent);
+  const lineas = o.lineas.map((s, i) => texto(g, s, { x: o.x, y: o.y + i * o.size * 0.88, size: o.size, fam: 'archivo', fill: C.crema }));
+  return { g, lineas };
+}
+
+/* ---------- Fichas de campo ---------- */
+const FICHAS = [
+  { n: 'Registro 01', titulo: ['Estero'], cientifico: ['*Aegla* sp.'], local: 'pancora', dibujo: 'estero' },
+  { n: 'Registro 02', titulo: ['Picaflor', 'chico'], cientifico: ['*Sephanoides*', '*sephaniodes*'], local: 'pigda', dibujo: 'picaflor' },
+  { n: 'Registro 03', titulo: ['Monito', 'del monte'], cientifico: ['*Dromiciops*', '*gliroides*'], local: 'chumaihuén', dibujo: 'monito' },
+];
+
+/* Dibujos de campo en una caja de 400×240. Trazo azul profundo; el único
+   naranjo es la corona del picaflor macho, su rasgo diagnóstico. */
+const DIBUJOS = {
+  estero() {
+    const lecho = [[0, 58], [36, 60], [64, 74], [88, 108], [112, 136], [146, 150], [184, 162], [222, 180], [258, 196], [290, 200], [314, 188], [330, 158], [342, 118], [356, 84], [378, 70], [400, 68]];
+    const m = muestreaCurva(lecho, 12), agua = 104;
+    let xi = 0, xd = 400;
+    for (let i = 0; i < m.length - 1; i++) {
+      if (m[i][1] < agua && m[i + 1][1] >= agua && xi === 0) xi = lerp(m[i][0], m[i + 1][0], (agua - m[i][1]) / (m[i + 1][1] - m[i][1]));
+      if (m[i][1] >= agua && m[i + 1][1] < agua) xd = lerp(m[i][0], m[i + 1][0], (agua - m[i][1]) / (m[i + 1][1] - m[i][1]));
+    }
+    const out = [
+      { d: curva(lecho, false), w: 3.4 },
+      { d: `M${f1(xi)},${agua}H${f1(xd)}`, w: 2.6 },
+      { d: `M${f1(xi)},22V38M${f1(xi)},30H${f1(xd)}M${f1(xd)},22V38`, w: 2.4 },
+    ];
+    for (const x of [206, 244, 282, 318]) {
+      const yb = yEnX(m, x);
+      out.push({ d: `M${x},${agua + 4}V${f1(yb - 5)}`, w: 2.4 });
+      out.push({ relleno: C.azul, d: `M${x - 4},${f1(yb - 1)}a4,4 0 1,0 8,0a4,4 0 1,0 -8,0` });
+    }
+    // Piedras del vado y una pancora vista desde arriba
+    out.push({ d: 'M74,120c4,-10 26,-12 32,-2c3,6 -8,10 -18,10c-10,0 -16,-2 -14,-8z', w: 2.4 });
+    out.push({ d: 'M160,150c3,-8 22,-9 26,-2c2,5 -7,8 -14,8c-8,0 -14,-1 -12,-6z', w: 2.4 });
+    out.push({ d: 'M118,128c0,-9 10,-14 20,-14c11,0 18,6 18,14c0,8 -8,13 -19,13c-10,0 -19,-5 -19,-13z', w: 2.6 });
+    out.push({ d: 'M121,122l-14,-9l-10,1m10,-1l-6,8M121,134l-14,9l-10,-1m10,1l-6,-8', w: 2.2 });
+    out.push({ d: 'M134,115l6,-11M144,116l8,-9M152,121l10,-6M134,141l6,11M144,140l8,9M152,135l10,6', w: 2.2 });
+    return out;
+  },
+  picaflor() {
+    return [
+      // Chilco (Fuchsia magellanica), flor colgante que poliniza
+      { d: 'M96,0C99,18 104,32 110,44', w: 2.4 },
+      { d: 'M106,46c0,-4 8,-4 8,0c0,4 -8,4 -8,0z', w: 2.2 },
+      { d: 'M107,50L108,70M114,50L114,70', w: 2.2 },
+      { d: 'M108,70C94,72 82,80 74,92C86,88 98,82 110,78M114,70C128,72 140,80 148,92C136,88 124,82 112,78', w: 2.4 },
+      { d: 'M102,78C100,94 104,104 111,108C118,104 122,94 120,78', w: 2.4 },
+      { d: 'M108,106L104,128M111,108L111,132M114,106L118,128', w: 2 },
+      // Picaflor chico en vuelo, pico hacia la flor
+      { d: 'M157,140L124,120', w: 2.6 },
+      { d: 'M156,146C152,132 160,124 172,124C184,124 190,134 186,146C183,156 170,160 162,156', w: 3 },
+      { d: 'M186,140C204,148 222,164 236,186', w: 3 },
+      { d: 'M162,156C168,176 188,192 212,198C222,198 230,194 236,186', w: 3 },
+      { d: 'M236,186L270,220M228,193L256,230M240,182L278,210', w: 2.6 },
+      { d: 'M196,150C212,116 242,84 292,62C272,94 246,128 212,162', w: 3 },
+      { d: 'M202,160C234,162 270,154 306,138C278,160 242,172 208,170', w: 2.2, opacidad: 0.45 },
+      { d: 'M206,196l2,9M214,198l2,9', w: 2.2 },
+      { relleno: C.azul, d: 'M166,135a3,3 0 1,0 6,0a3,3 0 1,0 -6,0' },
+      { relleno: C.naranjo, corona: true, d: 'M158,134C160,124 172,119 184,126C178,129 168,131 160,138Z' },
+    ];
+  },
+  monito() {
+    return [
+      { d: 'M0,208C110,200 250,184 400,166', w: 3.2 },
+      { d: 'M300,178C320,162 334,152 358,146', w: 2.4 },
+      { d: 'M172,168C164,134 190,110 232,108C278,106 314,130 318,160C320,178 306,190 288,190', w: 3 },
+      { d: 'M172,168C180,184 200,192 226,192', w: 3 },
+      { d: 'M288,190C282,197 272,199 260,196', w: 2.6 },
+      { d: 'M186,170C188,184 186,194 180,200M174,200l12,2', w: 2.6 },
+      { d: 'M178,150C182,124 172,100 148,96C126,92 106,106 100,122C96,130 92,136 86,140C92,146 102,148 112,150C130,158 158,162 178,150', w: 3 },
+      { d: 'M152,100C148,82 162,70 174,78C182,84 180,96 170,104', w: 2.8 },
+      { d: 'M158,96C158,86 166,82 170,88', w: 2 },
+      { d: 'M98,142L70,136M98,145L72,150', w: 1.8 },
+      { d: 'M316,168C348,174 366,196 358,216C350,234 324,236 318,222C314,210 328,204 336,212', w: 3 },
+      { d: 'M306,180C334,188 348,202 344,214', w: 2.4 },
+      { relleno: C.azul, d: 'M116,120c0,-8 7,-13 15,-13c9,0 15,5 15,13c0,8 -7,12 -15,12c-8,0 -15,-4 -15,-12z' },
+      { relleno: C.acuarela, d: 'M131,117a3,3 0 1,0 6,0a3,3 0 1,0 -6,0' },
+      { relleno: C.azul, d: 'M83,140a4,4 0 1,0 8,0a4,4 0 1,0 -8,0' },
+    ];
+  },
+};
+
+function construirFichas(parent) {
+  const F = L.fichas, w = F.w, pad = 34, ilW = w - 2 * pad, ilH = Math.round(ilW * 0.62), ilY = pad + 70;
+  S.fichasG = mk('g', null, parent);
+  S.fichas = FICHAS.map((datos, i) => {
+    const g = mk('g', { opacity: 0 }, S.fichasG);
+    const sombra = mk('rect', { x: 0, y: 0, width: w, height: 10, rx: 16, fill: NOCHE, opacity: 0.35 }, g);
+    const fondo = mk('rect', { x: 0, y: 0, width: w, height: 10, rx: 16, fill: C.acuarela }, g);
+    const textos = [];
+    textos.push(texto(g, datos.n, { x: pad, y: pad + 42, size: 48, fill: C.azulMedio }));
+    // Marco con retícula milimetrada
+    let dRet = '';
+    for (let x = pad + 24; x < pad + ilW; x += 24) dRet += `M${x},${ilY}V${ilY + ilH}`;
+    for (let y = ilY + 24; y < ilY + ilH; y += 24) dRet += `M${pad},${y}H${pad + ilW}`;
+    mk('path', { d: dRet, stroke: C.azulMedio, 'stroke-opacity': 0.14, 'stroke-width': 1.5, fill: 'none' }, g);
+    mk('rect', { x: pad, y: ilY, width: ilW, height: ilH, fill: 'none', stroke: C.azulMedio, 'stroke-opacity': 0.4, 'stroke-width': 2 }, g);
+    const dib = mk('g', { 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+    const trazos = [], rellenos = [];
+    const anchos = [];
+    let corona = null;
+    for (const t of DIBUJOS[datos.dibujo]()) {
+      if (t.relleno) {
+        const p = mk('path', { d: t.d, fill: t.relleno, opacity: 0 }, dib);
+        rellenos.push(p);
+        if (t.corona) corona = p;
+      } else {
+        const p = mk('path', { d: t.d, fill: 'none', stroke: C.azul, 'stroke-opacity': t.opacidad || 1 }, dib);
+        trazos.push({ p, L: largo(p) });
+        anchos.push(t.w || 3);
+      }
+    }
+    // Encaja el dibujo en el marco según lo que ocupa de verdad, con aire alrededor.
+    const bb = dib.getBBox(), aire = 22;
+    const fz = Math.min((ilW - 2 * aire) / bb.width, (ilH - 2 * aire) / bb.height);
+    dib.setAttribute('transform', `translate(${f1(pad + ilW / 2 - (bb.x + bb.width / 2) * fz)} ${f1(ilY + ilH / 2 - (bb.y + bb.height / 2) * fz)}) scale(${fz.toFixed(4)})`);
+    trazos.forEach((tr, k) => tr.p.setAttribute('stroke-width', f1((anchos[k] * 1.15) / fz)));
+    let y = ilY + ilH + 78;
+    datos.titulo.forEach((s, k) => { if (k) y += 58; textos.push(texto(g, s, { x: pad, y, size: 64, fam: 'archivo', fill: C.azul })); });
+    datos.cientifico.forEach((s, k) => { y += k ? 54 : 62; textos.push(texto(g, s, { x: pad, y, size: 48, fill: C.azulMedio })); });
+    // REQUIERE CONSULTA PREVIA A LA COMUNIDAD: nombre local en mapuzugun (pewen, pigda, chumaihuén).
+    // «pancora» es castellano de Chile y no se muestra: la ficha ya lleva su nombre científico.
+    if (CONSULTA.nombresMapuzugun && datos.dibujo !== 'estero') { y += 54; textos.push(texto(g, datos.local, { x: pad, y, size: 48, fill: C.azul })); }
+    for (const t of textos) { const aw = ancho(t); if (aw > ilW + 2) console.warn('Texto más ancho que la ficha:', t.textContent, Math.round(aw)); }
+    return { g, sombra, fondo, textos, trazos, rellenos, corona, alto: y + 40, altoChip: ilY + ilH + pad, w };
+  });
+  const alto = Math.max(...S.fichas.map((f) => f.alto));
+  S.fichas.forEach((f) => { f.alto = alto; });
+}
+
+function construirEnlaces(parent) {
+  S.enlacesG = mk('g', { fill: 'none', stroke: C.papel, 'stroke-width': 3, 'stroke-linecap': 'round' }, parent);
+  const n = L.nodo;
+  S.lineas = L.chips.pos.map((pos) => {
+    const f = S.fichas[0], s = L.chips.s;
+    let a, d;
+    if (L.chips.lado === 'derecha') { a = [pos[0] + (f.w * s) / 2 + 8, pos[1]]; d = `M${a[0]},${a[1]}C${a[0] + 150},${a[1]} ${n.x - 170},${n.y} ${n.x},${n.y}`; }
+    else { a = [pos[0], pos[1] + (f.altoChip * s) / 2 + 8]; d = `M${a[0]},${a[1]}C${a[0]},${a[1] + 120} ${n.x},${n.y - 150} ${n.x},${n.y}`; }
+    const p = mk('path', { d }, S.enlacesG);
+    const o = mk('circle', { cx: a[0], cy: a[1], r: 6, fill: C.papel, stroke: 'none', opacity: 0 }, S.enlacesG);
+    return { p, o, L: largo(p) };
+  });
+  const P = L.proyecto;
+  const dE = L.chips.lado === 'derecha' ? `M${n.x + n.r},${n.y}H${P.x - 4}` : `M${n.x},${n.y + n.r}V${P.y - 4}`;
+  S.enlace = mk('path', { d: dE }, S.enlacesG);
+  S.Lenlace = largo(S.enlace);
+  S.nodo = mk('circle', { cx: n.x, cy: n.y, r: n.r, fill: C.azul, 'stroke-width': 5 }, S.enlacesG);
+  S.Lnodo = 2 * Math.PI * n.r;
+  S.punto = mk('circle', { cx: n.x, cy: n.y, r: 11, fill: C.naranjo, stroke: 'none', opacity: 0 }, S.enlacesG);
+}
+
+function construirProyecto(parent) {
+  const P = L.proyecto, pad = P.pad;
+  const clip = mk('clipPath', { id: 'corteProyecto' }, S.defs);
+  S.corte = mk('rect', { x: P.x, y: P.y, width: 0, height: 0 }, clip);
+  const g = mk('g', { 'clip-path': 'url(#corteProyecto)' }, parent);
+  const fondo = mk('rect', { x: P.x, y: P.y, width: P.w, height: 10, rx: 16, fill: C.crema }, g);
+  const t = [];
+  let y = P.y + pad + 40;
+  t.push(texto(g, 'Proyecto Nº 07', { x: P.x + pad, y, size: 48, fill: C.azulMedio }));
+  y += P.titulo * 1.08;
+  t.push(texto(g, 'Caudal del', { x: P.x + pad, y, size: P.titulo, fam: 'archivo', fill: C.azul }));
+  y += P.titulo * 0.88;
+  t.push(texto(g, 'estero', { x: P.x + pad, y, size: P.titulo, fam: 'archivo', fill: C.azul }));
+  y += 86;
+  t.push(texto(g, '5º a 8º básico', { x: P.x + pad, y, size: 60, fill: C.azul }));
+  y += 44;
+  const regla = mk('path', { d: `M${P.x + pad},${y}H${P.x + P.w - pad}`, stroke: C.ocre, 'stroke-width': 3 }, g);
+  // Dos fuentes con el mismo peso tipográfico: la medición y lo que sabe la comunidad.
+  y += 80;
+  const fila = (etiqueta, resto, yy) => {
+    const ge = mk('g', null, g);
+    const a = texto(ge, etiqueta, { x: P.x + pad, y: yy, size: 48, fam: 'archivo', fill: C.azul });
+    texto(ge, resto, { x: P.x + pad + ancho(a) + 26, y: yy, size: 50, fill: C.azul });
+    return ge;
+  };
+  t.push(fila('Medir', '*Q* = *v* · *A*', y));
+  y += 70;
+  t.push(fila('Escuchar', 'saberes de la comunidad', y));
+  const alto = y - P.y + pad;
+  fondo.setAttribute('height', alto);
+  S.proyecto = { g, textos: t, regla, alto };
+}
+
+function construirFoto(parent) {
+  // REQUIERE CONSULTA PREVIA A LA COMUNIDAD y consentimiento informado.
+  // Marcador de producción: describe la foto que habría que tomar.
+  S.foto = null;
+  if (!CONSULTA.fotoEstudiantes) return;
+  const F = L.foto;
+  const g = mk('g', { opacity: 0, transform: `rotate(${F.rot} ${F.x + F.w / 2} ${F.y + F.h / 2})` }, parent);
+  mk('rect', { x: F.x, y: F.y, width: F.w, height: F.h, fill: C.acuarela, stroke: C.azulMedio, 'stroke-width': 3, 'stroke-dasharray': '14 10', rx: 10 }, g);
+  const lineas = ['FOTO POR PRODUCIR', 'Estudiantes y su docente miden el ancho y la', 'profundidad del estero. Luz nublada, sin posar.'];
+  lineas.forEach((s, i) => texto(g, s, { x: F.x + 28, y: F.y + 48 + i * 44, size: i ? 34 : 30, fill: C.azul }));
+  S.foto = g;
+}
+
+function construirRotulo(parent) {
+  const g = mk('g', { opacity: 0 }, parent);
+  const guia = mk('path', { d: 'M0,0', stroke: C.papel, 'stroke-width': 2.5, fill: 'none', 'stroke-linecap': 'round' }, g);
+  // REQUIERE CONSULTA PREVIA A LA COMUNIDAD: «Rukapillán» figura en data/araucania/pois.json de la plataforma.
+  const nombreA = texto(g, CONSULTA.nombresMapuzugun ? 'Rukapillán · Villarrica' : 'Volcán Villarrica', { x: 0, y: 0, size: 48, fill: C.papel });
+  const nombreB = texto(g, 'Rio de Janeiro', { x: 0, y: 0, size: 48, fill: C.papel, });
+  const coord = texto(g, '39° 25′ S', { x: 0, y: 0, size: 48, fill: C.papel });
+  coord.setAttribute('font-variant-numeric', 'tabular-nums');
+  S.rotulo = { g, guia, nombreA, nombreB, coord };
+}
+
+function construirLogo(parent) {
+  const V = VARIANTES[L.logo.variante];
+  const esc = L.logo.ancho / V.w;
+  const x0 = L.logo.cx - (V.w * esc) / 2, y0 = L.logo.cy - (V.h * esc) / 2;
+  const g = mk('g', { transform: `translate(${f1(x0)} ${f1(y0)}) scale(${esc})` }, parent);
+  const monte = mk('path', { d: MONTE, fill: COLOR_LOGO, 'fill-rule': 'evenodd', transform: V.monte, opacity: 0 }, g);
+  const gp = mk('g', { transform: V.palabra }, g);
+  const subs = PALABRA.match(/M[^M]+/g);
+  const aprende = subs.filter((s) => parseFloat(s.split(/[ C]/)[1]) < 30).join('');
+  const local = subs.filter((s) => parseFloat(s.split(/[ C]/)[1]) >= 30).join('');
+  const pA = mk('path', { d: aprende, fill: COLOR_LOGO, 'fill-rule': 'evenodd', opacity: 0 }, gp);
+  const pL = mk('path', { d: local, fill: COLOR_LOGO, 'fill-rule': 'evenodd', opacity: 0 }, gp);
+  const punto = mk('circle', { cx: PUNTO_O.cx, cy: PUNTO_O.cy, r: PUNTO_O.r, fill: C.naranjo, opacity: 0 }, gp);
+  S.logo = { g, monte, pA, pL, punto, esc };
+}
+
+/* ==========================================================================
+   Render: un cuadro exacto para el tiempo t
+   ========================================================================== */
+function render(t) {
+  tActual = t;
+  // Fondo: negro azulado que se abre al azul de marca
+  const velo = 0.7 * (1 - ez(t, T.velo[0], T.velo[1]));
+  const colorFondo = mezcla(C.azul, '#000000', velo);
+  S.fondo.setAttribute('fill', colorFondo);
+
+  const cielo = ventana(t, T.s3Cambio[0], T.s3Cambio[1], T.s3Salida[0], T.s3Salida[1]);
+  S.cielo.setAttribute('opacity', cielo);
+
+  renderCurvas(t, colorFondo);
+  renderNiebla(t);
+  renderPaisaje(t);
+  renderLluvia(t);
+  renderRotulo(t);
+
+  const r = ventana(t, T.s4Reticula[0], T.s4Reticula[1], T.s4Reticula[2], T.s4Reticula[3]);
+  S.reticula.setAttribute('opacity', r);
+  renderFichas(t);
+  renderProyecto(t);
+  renderTitular(S.titular3, t, T.s3Titular);
+  renderTitular(S.titular6, t, T.s6Titular);
+  renderLogo(t);
+}
+
+function renderCurvas(t, colorFondo) {
+  const visibles = t < 7.6 || t >= 19.0;
+  S.curvasG.setAttribute('display', visibles ? 'inline' : 'none');
+  if (!visibles) return;
+  const G = S.geo;
+  let opGrupo = 1, rellenoOp = 1, transform = '';
+  if (t < 19) {
+    opGrupo = 1 - ez(t, 6.9, 7.5);
+    const u = ez(t, T.s3Cambio[0], T.s3Cambio[1]), R = L.retrae;
+    if (u > 0) {
+      const s = lerp(1, R.s, u), tx = lerp(L.volcan.cx, R.x, u), ty = lerp(L.volcan.by, R.y, u);
+      transform = `translate(${f1(tx)} ${f1(ty)}) scale(${s}) translate(${-L.volcan.cx} ${-L.volcan.by})`;
+    }
+  } else {
+    opGrupo = ez(t, T.s6Entrada[0], T.s6Entrada[1]) * (1 - ez(t, 22.8, 23.15));
+    rellenoOp = 1 - ez(t, 21.8, 22.2);
+  }
+  S.curvasG.setAttribute('opacity', opGrupo);
+  S.curvasG.setAttribute('transform', transform);
+  for (let k = 0; k < N; k++) {
+    const c = S.curvas[k];
+    let pts;
+    if (t < 19) {
+      const a = T.s2Alza.t0 + k * T.s2Alza.paso;
+      pts = lerpPts(G.planos[k], G.volcanes[k], ez(t, a, a + T.s2Alza.dur));
+      const prog = k === 0 ? ez(t, T.s1Linea[0], T.s1Linea[1]) : ez(t, T.s2Anillos.t0 + (k - 1) * T.s2Anillos.paso, T.s2Anillos.t0 + (k - 1) * T.s2Anillos.paso + T.s2Anillos.dur);
+      dibujaTrazo(c.p, c.L, prog);
+      c.p.setAttribute('visibility', prog > 0 ? 'visible' : 'hidden');
+    } else {
+      const a = T.s6Morph.t0 + k * T.s6Morph.paso;
+      pts = lerpPts(G.volcanes6[k], G.morros[k], ez(t, a, a + T.s6Morph.dur));
+      const b = T.s7Anida.t0 + k * T.s7Anida.paso, u = ez(t, b, b + T.s7Anida.dur);
+      if (u > 0) pts = lerpPts(pts, destinoLogo(k), u);
+      dibujaTrazo(c.p, c.L, 1);
+      c.p.setAttribute('visibility', 'visible');
+      // Las líneas de la bahía no forman el monte: se retiran antes.
+      c.p.setAttribute('stroke-opacity', k < 3 ? 1 - ez(t, 21.55, 21.95) : 1);
+    }
+    set(c.p, { d: curva(pts, true), fill: colorFondo, 'fill-opacity': rellenoOp });
+  }
+}
+/* Las curvas del morro caen, una tras otra, sobre el contorno oficial del
+   monte (3 a 10) y del círculo (11 a 15). Después el logo relleno las reemplaza. */
+function destinoLogo(k) {
+  return (k < 11 ? S.destMonte : S.destCirculo).pts;
+}
+
+function renderNiebla(t) {
+  const salida = 1 - ez(t, T.s3Salida[0], T.s3Salida[1]);
+  S.nieblas.forEach(({ p, n }, i) => {
+    const a = T.s2Niebla.t0 + i * T.s2Niebla.paso, e = ez(t, a, a + T.s2Niebla.dur);
+    const tx = n.desde * (1 - e) * L.W * 0.25 - n.desde * (t - a) * 10;
+    const retiro = ez(t, T.s3Cambio[0], T.s3Cambio[1]) * 30;
+    p.setAttribute('transform', `translate(${f1(tx)} ${f1(retiro)})`);
+    p.setAttribute('opacity', e * salida);
+  });
+}
+
+function renderPaisaje(t) {
+  const visible = t > 6.8 && t < 11.7;
+  S.lejos.setAttribute('display', visible ? 'inline' : 'none');
+  S.paisaje.setAttribute('display', visible ? 'inline' : 'none');
+  S.nota.g.setAttribute('display', visible ? 'inline' : 'none');
+  S.nota.guia.setAttribute('display', visible ? 'inline' : 'none');
+  if (!visible) return;
+  const R = L.retrae, u = ez(t, T.s3Cambio[0], T.s3Cambio[1]);
+  const s = lerp(1, R.s, u), tx = lerp(L.volcan.cx, R.x, u), ty = lerp(L.volcan.by, R.y, u);
+  const salida = 1 - ez(t, T.s3Salida[0], T.s3Salida[1]);
+  S.lejos.setAttribute('transform', `translate(${f1(tx)} ${f1(ty + (1 - salida) * 30)}) scale(${s}) translate(${-L.volcan.cx} ${-L.volcan.by})`);
+  S.lejos.setAttribute('opacity', ez(t, 6.9, 7.5) * salida);
+  const entra = ez(t, T.s3Cambio[0], T.s3Cambio[1]);
+  S.paisaje.setAttribute('opacity', entra * salida);
+  S.paisaje.setAttribute('transform', `translate(0 ${f1((1 - entra) * 40 + (1 - salida) * 40)})`);
+  // La araucaria aparece desde la niebla
+  S.arbol.g.setAttribute('opacity', ez(t, T.s3Arbol[0], T.s3Arbol[1]));
+  const deriva = (t - 7) * 14;
+  S.nieblaBosque.setAttribute('transform', `translate(${f1(deriva)} 0)`);
+  // Medición: la cinta baja por el tronco, marca cada 2 m y dobla en 1,3 m
+  const m = S.medicion, pc = ez(t, T.s3Cinta[0], T.s3Cinta[1]);
+  const y = lerp(m.yCopa, m.yDap, pc);
+  m.cinta.setAttribute('y2', f1(y));
+  m.cinta.setAttribute('opacity', pc > 0 ? 1 : 0);
+  m.tope.setAttribute('opacity', pc > 0 ? 1 : 0);
+  for (const mk_ of m.marcas) mk_.p.setAttribute('opacity', pc > 0 ? clamp((y - mk_.y) / 14) : 0);
+  const pcomp = ez(t, T.s3Compas[0], T.s3Compas[1]);
+  dibujaTrazo(m.compas, m.Lc, pcomp);
+  m.compas.setAttribute('opacity', pcomp > 0 ? 1 : 0);
+  const pn = ez(t, T.s3Nota[0], T.s3Nota[1]);
+  dibujaTrazo(S.nota.guia, S.nota.Lg, pn);
+  S.nota.guia.setAttribute('opacity', (pn > 0 ? 1 : 0) * salida);
+  S.nota.g.setAttribute('opacity', ez(t, T.s3Nota[0] + 0.15, T.s3Nota[1] + 0.15) * salida);
+}
+
+function renderLluvia(t) {
+  const op = ventana(t, 4.8, 5.8, 9.0, 9.6) * 0.16;
+  S.lluvia.setAttribute('opacity', op);
+  if (op <= 0) return;
+  for (const g of S.gotas) {
+    const y = ((g.y + g.v * t) % (L.H + 120)) - 60, x = g.x + y * 0.18;
+    set(g.p, { x1: f1(x), y1: f1(y), x2: f1(x + g.l * 0.18), y2: f1(y + g.l) });
+  }
+}
+
+function cumbre() {
+  const P = S.curvas[N - 1].p.getAttribute('d').match(/-?\d+(\.\d+)?,-?\d+(\.\d+)?/g).map((s) => s.split(',').map(Number));
+  return P.reduce((a, b) => (b[1] < a[1] ? b : a));
+}
+function renderRotulo(t) {
+  const R = S.rotulo;
+  const en2 = ventana(t, T.s2Rotulo[0], T.s2Rotulo[1], T.s2Rotulo[2], T.s2Rotulo[3]);
+  const en6 = ventana(t, T.s6Rotulo[0], T.s6Rotulo[1], T.s6Rotulo[2], T.s6Rotulo[3]);
+  const op = Math.max(en2, en6);
+  R.g.setAttribute('opacity', op);
+  if (op <= 0) return;
+  const c = cumbre();
+  const cfg = t < 12 ? L.rotulo2 : L.rotulo6;
+  const sg = cfg.anchor === 'start' ? 1 : -1;
+  const ax = c[0] + cfg.dx, ay = c[1] + cfg.dy;
+  for (const e of [R.nombreA, R.nombreB, R.coord]) set(e, { x: f1(ax), 'text-anchor': cfg.anchor });
+  set(R.nombreA, { y: f1(ay - 58) }); set(R.nombreB, { y: f1(ay - 58) }); set(R.coord, { y: f1(ay) });
+  R.guia.setAttribute('d', `M${f1(c[0] + sg * 8)},${f1(c[1] - 8)}L${f1(ax - sg * 14)},${f1(ay - 30)}`);
+  // Plano 6: el nombre cambia y la latitud corre de 39° 25′ S a 22° 54′ S
+  const v = t < 12 ? 0 : ez(t, T.s6Morph.t0, T.s6Morph.t0 + T.s6Morph.dur);
+  R.nombreA.setAttribute('opacity', 1 - clamp((v - 0.35) / 0.3));
+  R.nombreB.setAttribute('opacity', clamp((v - 0.35) / 0.3));
+  const min = Math.round(lerp(39 * 60 + 25, 22 * 60 + 54, v));
+  R.coord.textContent = `${Math.floor(min / 60)}° ${String(min % 60).padStart(2, '0')}′ S`;
+}
+
+function renderFichas(t) {
+  const F = L.fichas, CH = L.chips;
+  const visible = t > 11 && t < 19.5;
+  S.fichasG.setAttribute('display', visible ? 'inline' : 'none');
+  S.enlacesG.setAttribute('display', visible ? 'inline' : 'none');
+  if (S.foto) S.foto.setAttribute('opacity', ventana(t, 17.2, 17.7, T.s5Salida[0], T.s5Salida[1]));
+  if (!visible) return;
+  const comp = ez(t, T.s5Compacta[0], T.s5Compacta[1]);
+  const salida = 1 - ez(t, T.s5Salida[0], T.s5Salida[1]);
+  S.fichas.forEach((f, i) => {
+    const a = T.s4Fichas.t0 + i * T.s4Fichas.paso, e = ez(t, a, a + T.s4Fichas.dur);
+    const [cx, top, rot] = F.pos[i], [chx, chy, chr] = CH.pos[i];
+    const h = lerp(f.alto, f.altoChip, comp);
+    // Entra como sticker: baja, gira y se asienta; la sombra se acorta al pegarse.
+    const x = lerp(cx, chx, comp), y = lerp(top + f.alto / 2 + (1 - e) * 70, chy, comp) - salida * 0 - (1 - salida) * 20;
+    const r = lerp(rot + (1 - e) * 5, chr, comp), s = lerp(1 + (1 - e) * 0.05, CH.s, comp);
+    f.g.setAttribute('transform', `translate(${f1(x)} ${f1(y)}) rotate(${f1(r)}) scale(${s.toFixed(4)}) translate(${-f.w / 2} ${f1(-h / 2)})`);
+    f.g.setAttribute('opacity', Math.min(ez(t, a, a + 0.35), salida));
+    f.fondo.setAttribute('height', f1(h));
+    set(f.sombra, { height: f1(h), x: f1(lerp(18, 8, e)), y: f1(lerp(26, 12, e)), opacity: lerp(0.18, 0.35, e) });
+    const opTexto = 1 - lin(t, T.s5Compacta[0], T.s5Compacta[0] + 0.3);
+    f.textos.forEach((tx) => tx.setAttribute('opacity', opTexto));
+    const d0 = T.s4Dibujo.t0 + i * T.s4Dibujo.paso, pd = ez(t, d0, d0 + T.s4Dibujo.dur);
+    f.trazos.forEach((tr) => dibujaTrazo(tr.p, tr.L, pd));
+    f.rellenos.forEach((p) => { if (p !== f.corona) p.setAttribute('opacity', ez(t, d0 + 1.0, d0 + 1.3)); });
+    if (f.corona) {
+      f.corona.setAttribute('opacity', ez(t, T.s4Corona[0], T.s4Corona[1]));
+      // En el plano 5 el foco naranjo pasa al nodo; la corona queda en ocre.
+      f.corona.setAttribute('fill', mezcla(C.naranjo, C.ocre, ez(t, 15.0, 15.5)));
+    }
+  });
+  // Enlaces: líneas finas que convergen en un nodo; del nodo sale el proyecto.
+  S.lineas.forEach((l, i) => {
+    const a = T.s5Lineas.t0 + i * T.s5Lineas.paso, p = ez(t, a, a + T.s5Lineas.dur);
+    dibujaTrazo(l.p, l.L, p);
+    l.p.setAttribute('opacity', (p > 0 ? 1 : 0) * salida);
+    l.o.setAttribute('opacity', ez(t, a, a + 0.2) * salida);
+  });
+  const pn = ez(t, T.s5Nodo[0], T.s5Nodo[1]);
+  set(S.nodo, { stroke: C.papel, 'stroke-dasharray': `${S.Lnodo} ${S.Lnodo}`, 'stroke-dashoffset': f1(S.Lnodo * (1 - pn)), opacity: (pn > 0 ? 1 : 0) * salida });
+  S.punto.setAttribute('opacity', ez(t, T.s5Punto[0], T.s5Punto[1]) * salida);
+  const pe = ez(t, T.s5Enlace[0], T.s5Enlace[1]);
+  dibujaTrazo(S.enlace, S.Lenlace, pe);
+  S.enlace.setAttribute('opacity', (pe > 0 ? 1 : 0) * salida);
+}
+
+function renderProyecto(t) {
+  const P = L.proyecto, pr = S.proyecto;
+  const e = ez(t, T.s5Ficha[0], T.s5Ficha[1]);
+  const salida = 1 - ez(t, T.s5Salida[0], T.s5Salida[1]);
+  pr.g.setAttribute('opacity', salida);
+  pr.g.setAttribute('transform', `translate(0 ${f1(-(1 - salida) * 20)})`);
+  if (L.chips.lado === 'derecha') set(S.corte, { x: P.x, y: P.y - 20, width: f1(P.w * e), height: pr.alto + 40 });
+  else set(S.corte, { x: P.x - 20, y: P.y, width: P.w + 40, height: f1(pr.alto * e) });
+  pr.textos.forEach((tx, i) => {
+    const a = T.s5Textos.t0 + i * T.s5Textos.paso, u = ez(t, a, a + T.s5Textos.dur);
+    tx.setAttribute('opacity', u);
+    tx.setAttribute('transform', `translate(0 ${f1((1 - u) * 16)})`);
+  });
+  pr.regla.setAttribute('opacity', ez(t, T.s5Textos.t0 + 0.4, T.s5Textos.t0 + 0.9));
+}
+
+function renderTitular(b, t, v) {
+  const op = ventana(t, v[0], v[1], v[2], v[3]);
+  b.g.setAttribute('opacity', op > 0 ? 1 : 0);
+  if (op <= 0) return;
+  b.lineas.forEach((ln, i) => {
+    const u = ez(t, v[0] + i * 0.08, v[1] + i * 0.08), sal = ez(t, v[2], v[3]);
+    ln.setAttribute('opacity', Math.min(u, 1 - sal));
+    ln.setAttribute('transform', `translate(0 ${f1((1 - u) * 24 - sal * 12)})`);
+  });
+}
+
+function renderLogo(t) {
+  const lg = S.logo;
+  const visible = t > 21.5;
+  lg.g.setAttribute('display', visible ? 'inline' : 'none');
+  if (!visible) return;
+  lg.monte.setAttribute('opacity', ez(t, T.s7Monte[0], T.s7Monte[1]));
+  const W = T.s7Palabra;
+  [lg.pA, lg.pL].forEach((p, i) => {
+    const u = ez(t, W.t0 + i * W.paso, W.t0 + i * W.paso + W.dur);
+    p.setAttribute('opacity', u);
+    p.setAttribute('transform', `translate(${f1(-(1 - u) * 4)} 0)`);
+  });
+  // El punto cae dentro del anillo de la «o», como un pin.
+  const u = ez(t, T.s7Punto[0], T.s7Punto[1]);
+  lg.punto.setAttribute('opacity', lin(t, T.s7Punto[0], T.s7Punto[0] + 0.12));
+  lg.punto.setAttribute('transform', `translate(0 ${f1(-(1 - u) * 26)})`);
+}
+
+/* ==========================================================================
+   Reproducción y controles
+   ========================================================================== */
+let ultimo = null;
+function bucle(ahora) {
+  if (reproduciendo && ultimo !== null) {
+    let t = tActual + Math.min(0.1, (ahora - ultimo) / 1000);
+    if (t >= DUR) { t = DUR; reproduciendo = false; actualizaBoton(); }
+    render(t);
+    actualizaUI();
+  }
+  ultimo = ahora;
+  requestAnimationFrame(bucle);
+}
+function actualizaUI() {
+  $('#barra').value = tActual.toFixed(2);
+  $('#tiempo').textContent = tActual.toFixed(2).replace('.', ',') + ' s';
+  let nombre = PLANOS[0][1];
+  for (const [t0, n] of PLANOS) if (tActual >= t0) nombre = n;
+  $('#plano').textContent = nombre;
+}
+function actualizaBoton() { $('#bPlay').textContent = reproduciendo ? 'Pausa' : 'Reproducir'; }
+function ajustaEscenario() {
+  const svg = $('#stage');
+  if (LIMPIO) { svg.style.width = '100vw'; svg.style.height = '100vh'; return; }
+  const cont = $('#escena');
+  const w = cont.clientWidth - 32, h = cont.clientHeight - 32;
+  const k = Math.min(w / L.W, h / L.H);
+  svg.style.width = L.W * k + 'px';
+  svg.style.height = L.H * k + 'px';
+}
+function cambiaFormato(f) {
+  FORMATO = f;
+  construir();
+  ajustaEscenario();
+  render(tActual);
+  document.querySelectorAll('[data-formato]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.formato === FORMATO)));
+  const u = new URL(location.href); u.searchParams.set('formato', f); u.searchParams.delete('t'); history.replaceState(null, '', u);
+}
+
+async function iniciar() {
+  if (LIMPIO) document.documentElement.classList.add('limpio');
+  // ?consulta=nombresMapuzugun,fotoEstudiantes solo para mostrar la propuesta en la consulta misma.
+  for (const k of (Q.get('consulta') || '').split(',')) if (k in CONSULTA) CONSULTA[k] = true;
+  document.querySelectorAll('[data-consulta]').forEach((c) => { c.checked = CONSULTA[c.dataset.consulta]; });
+  try {
+    await Promise.all(['800 64px Archivo', '500 48px Newsreader', 'italic 500 48px Newsreader'].map((f) => document.fonts.load(f, 'aprende Ø º ′ ·')));
+    await document.fonts.ready;
+  } catch (e) { /* sin red: se sigue con las fuentes de respaldo */ }
+  cambiaFormato(FORMATO);
+  const t0 = parseFloat(Q.get('t'));
+  if (!Number.isNaN(t0)) { reproduciendo = false; render(clamp(t0, 0, DUR)); }
+  actualizaBoton(); actualizaUI();
+  listo = true;
+  requestAnimationFrame(bucle);
+
+  $('#bPlay').onclick = () => { if (tActual >= DUR) render(0); reproduciendo = !reproduciendo; actualizaBoton(); };
+  $('#bReiniciar').onclick = () => { render(0); reproduciendo = true; actualizaBoton(); actualizaUI(); };
+  $('#barra').oninput = (e) => { reproduciendo = false; actualizaBoton(); render(parseFloat(e.target.value)); actualizaUI(); };
+  document.querySelectorAll('[data-formato]').forEach((b) => (b.onclick = () => cambiaFormato(b.dataset.formato)));
+  document.querySelectorAll('[data-consulta]').forEach((c) => (c.onchange = () => { CONSULTA[c.dataset.consulta] = c.checked; cambiaFormato(FORMATO); }));
+  addEventListener('resize', ajustaEscenario);
+  addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' && e.target.type === 'range' && e.key !== ' ') return;
+    if (e.key === ' ') { e.preventDefault(); $('#bPlay').click(); }
+    else if (e.key === 'r' || e.key === 'R') $('#bReiniciar').click();
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { reproduciendo = false; actualizaBoton(); render(clamp(tActual + (e.key === 'ArrowRight' ? 0.1 : -0.1), 0, DUR)); actualizaUI(); }
+  });
+}
+
+/* Para exportar cuadro a cuadro (ver exportar.mjs). */
+window.AL = {
+  get listo() { return listo; },
+  duracion: DUR,
+  renderAt(t) { reproduciendo = false; render(clamp(t, 0, DUR)); },
+};
+iniciar();
+</script>
+</body>
+</html>
